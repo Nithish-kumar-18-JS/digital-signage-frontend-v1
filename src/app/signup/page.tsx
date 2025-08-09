@@ -11,8 +11,8 @@ import { useRouter } from "next/navigation"
 
 export default function Signup() {
   const formValidation = z.object({
-    first_name: z.string().nonempty("First name is required"),
-    last_name: z.string().nonempty("Last name is required"),
+    firstName: z.string().nonempty("First name is required"),
+    lastName: z.string().nonempty("Last name is required"),
     email: z.string().email("Invalid email").nonempty("Email is required"),
     password: z.string().nonempty("Password is required"),
   })
@@ -54,7 +54,7 @@ export default function Signup() {
             <input
               type="text"
               placeholder="Enter your first name"
-              {...register("first_name")}
+              {...register("firstName")}
               className="w-full border border-white/20 bg-white/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
             />
           </div>
@@ -67,7 +67,7 @@ export default function Signup() {
             <input
               type="text"
               placeholder="Enter your last name"
-              {...register("last_name")}
+              {...register("lastName")}
               className="w-full border border-white/20 bg-white/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
             />
           </div>
