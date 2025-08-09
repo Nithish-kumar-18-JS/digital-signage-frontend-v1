@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { LucideChevronLeftCircle, LucideChevronRightCircle } from "lucide-react";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
+import { clearAllCookies } from "@/lib/utils";
 
 export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: boolean) => void}) => {
   const pathname = usePathname();
- 
+  const router = useRouter()
 
   const navLinks = [
     { name: "Dashboard", href: "/", icon: "/icons/dashboard.png" },
@@ -18,6 +20,11 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
     { name: "Schedule", href: "/schedule", icon: "/icons/schedule.png" },
     { name: "Users", href: "/users", icon: "/icons/users.png" }
   ];
+
+  const handleLogout = () => {
+    clearAllCookies(); 
+    router.push("/login"); 
+  }
 
   return (
     <aside
@@ -82,7 +89,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
           isOpen ? "px-5" : ""
         )}
       >
-        <div className="flex items-center p-4 hover:bg-gray-100 rounded w-full cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white">
+        <div onClick={handleLogout} className="flex items-center p-4 hover:bg-gray-100 rounded w-full cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white">
           <Image src="/icons/logout.png" alt="Logout" width={24} height={24} className="mr-2" />
           <span
             className={clsx(
