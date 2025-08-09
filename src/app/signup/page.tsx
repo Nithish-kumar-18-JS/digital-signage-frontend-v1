@@ -39,7 +39,7 @@ export default function Signup() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
       {/* Glassy Card */}
-      <div className="flex flex-col items-center w-[400px] p-6 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg shadow-2xl">
+      <div className="flex flex-col items-center w-[400px] p-6 rounded-2xl border border-white/20 bg-[#FAFAFA]/10 backdrop-blur-lg shadow-2xl">
         <h1 className="text-3xl font-bold text-white w-full text-left border-b border-white/20 pb-4">
           Sign in to Digital Signage
         </h1>
@@ -55,7 +55,7 @@ export default function Signup() {
               type="text"
               placeholder="Enter your first name"
               {...register("firstName")}
-              className="w-full border border-white/20 bg-white/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
+              className="w-full border border-white/20 bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
             />
           </div>
 
@@ -68,7 +68,7 @@ export default function Signup() {
               type="text"
               placeholder="Enter your last name"
               {...register("lastName")}
-              className="w-full border border-white/20 bg-white/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
+              className="w-full border border-white/20 bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
             />
           </div>
 
@@ -81,7 +81,7 @@ export default function Signup() {
               type="email"
               placeholder="Enter your email"
               {...register("email")}
-              className="w-full border border-white/20 bg-white/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
+              className="w-full border border-white/20 bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
             />
           </div>
 
@@ -94,7 +94,7 @@ export default function Signup() {
               type="password"
               placeholder="Enter your password"
               {...register("password")}
-              className="w-full border border-white/20 bg-white/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
+              className="w-full border border-white/20 bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
             />
           </div>
 

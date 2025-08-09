@@ -1,0 +1,82 @@
+'use client';
+
+import Image from 'next/image';
+
+export default function Dashboard() {
+    const insights = [
+        {
+            name: "Total Screens",
+            value: "26",
+            icon: "/icons/screens.png",
+            change: "+2 last month"
+        },
+        {
+            name: "Active Screens",
+            value: "12",
+            icon: "/icons/checked.png",
+            change: "2 offline"
+        },
+        {
+            name: "Total Playlists",
+            value: "12",
+            icon: "/icons/playlist.png",
+            change: "2 offline"
+        },
+        {
+            name: "Total Media",
+            value: "12",
+            icon: "/icons/media.png",
+            change: "2.3 TB used"
+        }
+    ];
+
+    return (
+        <div className='w-full'>
+            {/* Dashboard insights */}
+            <div className="grid grid-cols-4 gap-6">
+                {insights.map((insight, index) => (
+                    <div
+                        key={index}
+                        className="rounded-lg  dark:bg-[#222222] shadow-lg p-4 flex items-center gap-4"
+                    >
+                        <div className="w-[80px] h-[80px] flex items-center justify-center rounded-full bg-[#f5f5f5] dark:bg-[#3a3a3a]">
+                            <Image src={insight.icon} alt={insight.name} width={40} height={40} />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <h1 className="text-sm dark:text-white">{insight.name}</h1>
+                            <p className="text-3xl font-bold dark:text-white">{insight.value}</p>
+                            <p className="text-sm dark:text-white">{insight.change}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            {/* Container 2 */}
+            <div className="grid gap-6 mt-6 [grid-template-columns:2fr_1fr]">
+                {/* Left column */}
+                <div className="w-full h-[450px] bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
+                    {/* Recent Activity content */}
+                    <div className="p-4">
+                        <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">Recent Activity</h1>
+                        {/* empty state */}
+                    </div>
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-gray-500 dark:text-gray-400">No recent activity</p>
+                    </div>
+                </div>
+
+                {/* Right column */}
+                <div className="w-full h-[450px] bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
+                    {/* System Health content */}
+                    <div className="p-4">
+                        <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">System Health</h1>
+                        {/* empty state */}
+                    </div>
+                    <div className="flex items-center justify-center h-full">
+                        <p className="text-gray-500 dark:text-gray-400">No system health data available</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    );
+}

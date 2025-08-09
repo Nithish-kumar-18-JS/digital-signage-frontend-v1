@@ -13,6 +13,7 @@ const login = async (data: LoginData) => {
     try {
         const response = await apiClient.post(`${API_BASE_URL}/auth/login`, data);
         if(response.data.token){
+            localStorage.setItem("x-auth-token", response.data.token);
             setCookie("x-auth-token", response.data.token);
         }else{
             throw new Error("Token not found in response");
@@ -28,6 +29,7 @@ const signup = async (data:SignupData) => {
     try {
         const response = await apiClient.post(`${API_BASE_URL}/auth/signup`, data);
         if(response.data.token){
+            localStorage.setItem("x-auth-token", response.data.token);
             setCookie("x-auth-token", response.data.token);
         }else{
             throw new Error("Token not found in response");

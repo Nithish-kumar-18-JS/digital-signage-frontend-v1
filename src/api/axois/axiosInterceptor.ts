@@ -8,7 +8,7 @@ function getToken() {
 
 // Create axios instance
 const apiClient = axios.create({
-  baseURL: process.env.API_URL, // your API base URL
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // your API base URL
   timeout: 10000,
 });
 
@@ -16,6 +16,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = getToken();
+    console.log("token",token)
     if (token) {
       config.headers = config.headers || {};
       config.headers['Authorization'] = `Bearer ${token}`;

@@ -1,19 +1,12 @@
 import { redirect } from "next/navigation"
-import { getCookies } from "@/lib/utils"
+import { cookies } from "next/headers"
 
 export default async function Home() {
-  const token = getCookies("x-auth-token");
+  const cookieStore = await cookies();
+  const token = cookieStore.get("x-auth-token")?.value;
 
   if (token) {
-    // Optional: Validate token with API
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-    })
-
-    if (res.ok) {
-      redirect("/dashboard")
-    }
+    redirect("/dashboard")
   }
 
   redirect("/login")

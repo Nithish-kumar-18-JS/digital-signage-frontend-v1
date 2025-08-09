@@ -20,7 +20,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
           )}
         >
           <Header open={isOpen}/>
-          <main className="mt-20 pl-10">{children}</main>
+          <main>{children}</main>
         </div>
       </div>
     </ThemeProvider>

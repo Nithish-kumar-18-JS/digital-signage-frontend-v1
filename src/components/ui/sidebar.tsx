@@ -29,12 +29,12 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
   return (
     <aside
       className={clsx(
-        "h-screen fixed top-0 left-0 z-10 border-r border-gray-100 dark:border-gray-600 bg-white dark:bg-black flex flex-col transition-all duration-500 ease-in-out",
+        "h-screen fixed top-0 left-0 z-10  bg-[#FAFAFA] dark:bg-[#222222] flex flex-col transition-all duration-500 ease-in-out",
         isOpen ? "w-74" : "w-20"
       )}
     >
       {/* Header */}
-      <div className="h-16 flex items-center justify-center border-b border-gray-100 dark:border-gray-600 overflow-hidden">
+      <div className="h-16 flex items-center justify-center overflow-hidden">
         {isOpen && <h1
           className={clsx(
             "text-xl font-semibold dark:text-white whitespace-nowrap transition-opacity duration-300",
@@ -48,7 +48,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
       {/* Navigation */}
       <nav
         className={clsx(
-          "mt-5 flex-1 border-b border-gray-100 dark:border-gray-600",
+          "mt-5 flex-1",
           isOpen ? "mx-5" : "mx-3 w-[50px]"
         )}
       >
@@ -60,7 +60,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
                 className={clsx(
                   "flex items-center p-4 rounded mt-4 cursor-pointer transition-colors duration-200",
                   "hover:bg-gray-100 hover:text-black dark:hover:bg-gray-600 dark:hover:text-white",
-                  isActive && "bg-red-400 text-white dark:bg-red-400 dark:text-white"
+                  isActive && "bg-[#757575] text-white dark:bg-[#757575] dark:text-white"
                 )}
               >
                 {/* Fixed-size icon container */}
@@ -69,7 +69,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
                 </div>
                 <span
                   className={clsx(
-                    "whitespace-nowrap transition-opacity duration-300 overflow-hidden",
+                    "whitespace-nowrap font-bold transition-opacity duration-300 overflow-hidden",
                     isOpen ? "opacity-100 ml-2" : "opacity-0 w-0"
                   )}
                 >
@@ -85,7 +85,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
       {/* Footer */}
       <div
         className={clsx(
-          "h-16 flex items-center justify-center border-t border-gray-100 dark:border-gray-600",
+          "h-16 flex items-center justify-center",
           isOpen ? "px-5" : ""
         )}
       >
@@ -93,7 +93,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
           <Image src="/icons/logout.png" alt="Logout" width={24} height={24} className="mr-2" />
           <span
             className={clsx(
-              "dark:text-white whitespace-nowrap transition-opacity duration-300 overflow-hidden",
+              "dark:text-white whitespace-nowrap font-bold transition-opacity duration-300 overflow-hidden",
               isOpen ? "opacity-100" : "opacity-0 w-0"
             )}
           >
@@ -105,7 +105,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute -right-3 top-8 bg-white dark:bg-black rounded-full shadow p-1 cursor-pointer hover:scale-105 transition-transform"
+        className="absolute -right-3 top-8 bg-[#FAFAFA] dark:bg-[#222222] rounded-full shadow p-1 cursor-pointer hover:scale-105 transition-transform"
       >
         {isOpen ? (
           <LucideChevronLeftCircle className="h-6 w-6 text-gray-600 dark:text-gray-300" />
