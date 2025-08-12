@@ -5,12 +5,14 @@ import clsx from "clsx";
 import Header from "@/components/ui/header";
 import { Sidebar } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
-
+import { Provider } from "react-redux";
+import { store } from "@/lib/store/store";
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <Provider store={store}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="min-h-screen flex">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div
@@ -24,5 +26,6 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
         </div>
       </div>
     </ThemeProvider>
+    </Provider>
   );
 }

@@ -1,7 +1,16 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { MediaData } from "@/types/media";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import debounce from 'lodash/debounce';
 import {
     Form,
     FormControl,
@@ -19,14 +28,20 @@ import {
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMedia, getAllMedia, uploadMedia } from "@/api/media/media";
 import { z } from "zod";
+import { useDispatch, useSelector } from "react-redux";
+import { addMediaSlice, deleteMediaSlice, fetchMediaSlice, searchMediaSlice, updateMediaSlice } from "@/lib/store/mediaSlice";
+import { uploadMedia } from "@/api/media/media";
+import type { RootState, AppDispatch } from "@/lib/store/store";
+import { Button } from "./ui/button";
+import { GlobalDialog } from "./modals/globalDialog";
 
 const MediaType = z.enum(["IMAGE", "VIDEO", "AUDIO", "HTML"]);
 
 const formValidationSchema = z.object({
+    id: z.number().nullable().optional(),
     name: z.string().min(1, "Name is required"),
-    type: MediaType,
+    type: MediaType.optional(),
     description: z.string().optional(),
     url: z.string().url("Invalid URL").optional(),
 });
@@ -44,24 +59,33 @@ export default function Media() {
         },
     });
 
-    const [mediaData, setMediaData] = useState<MediaData[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [backendError, setBackendError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const fetchMedia = async () => {
-        try {
-            const result = await getAllMedia();
-            setMediaData(result);
-        } catch (error: any) {
-            console.error("Error getting media:", error?.response || error);
-        }
-    };
+    const dispatch: AppDispatch = useDispatch();
+    const media = useSelector((state: RootState) => state.media.items);
+
+    // Fetch on mount
+    useEffect(() => {
+        dispatch(fetchMediaSlice());
+    }, [dispatch]);
+
+    // Debounced search
+    const debouncedSearch = useMemo(
+        () => debounce((value: string) => {
+            dispatch(searchMediaSlice(value));
+        }, 500),
+        [dispatch]
+    );
 
     useEffect(() => {
-        fetchMedia();
-    }, []);
+        return () => {
+            debouncedSearch.cancel();
+        };
+    }, [debouncedSearch]);
 
     const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -91,39 +115,53 @@ export default function Media() {
         setBackendError(null);
         setLoading(true);
         try {
-            // Remove empty url if no file uploaded
             if (!previewUrl) {
-                delete data.url;
+                delete (data as any).url;
             }
-
-            console.log("Submitting data:", data);
-
-            await addMedia(data as MediaData);
+            if(data.id){
+                await dispatch(updateMediaSlice(data as MediaData));
+            }else{
+                await dispatch(addMediaSlice(data as MediaData));
+            }
             setPreviewUrl(null);
             form.reset();
-            fetchMedia();
+            dispatch(fetchMediaSlice());
         } catch (error: any) {
             const errMsg = error?.response?.data?.message || "Failed to upload media";
             setBackendError(errMsg);
-            console.error("Error uploading media:", error);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleEdit = async (media: MediaData) => {
-        // form.reset(media);
-        setPreviewUrl(media.url);
+    const handleEdit = (media: MediaData) => {
+        setPreviewUrl(media.url || null);
+        form.reset({
+            id: media.id,
+            ...media,
+            type: media.type as "IMAGE" | "VIDEO" | "AUDIO" | "HTML" | undefined
+        });
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (id: number) => {
         try {
-            // await deleteMedia(id);
-            fetchMedia();
+            await dispatch(deleteMediaSlice(id));
+            dispatch(fetchMediaSlice());
         } catch (error: any) {
             console.error("Error deleting media:", error?.response || error);
         }
     };
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        debouncedSearch(e.target.value);
+    };
+
+    <MediaTable
+        media={media}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+    />
 
     return (
         <div>
@@ -134,73 +172,29 @@ export default function Media() {
                     <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
                         Media
                     </h1>
-                    {mediaData.length === 0 ? (
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                placeholder="Search media..."
+                                className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                onChange={handleSearch}
+                                value={searchQuery}
+                            />
+                        </div>
+                    </div>
+                    {media.length === 0 ? (
                         <div className="flex items-center justify-center h-full">
                             <p className="text-gray-500 dark:text-gray-400">
                                 No media available
                             </p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 gap-4 mt-4">
-                            {mediaData.map((media) => (
-                                <div
-                                    key={media.id}
-                                    className="flex flex-col bg-white dark:bg-[#2a2a2a] rounded-lg shadow hover:shadow-lg transition-shadow p-4"
-                                >
-                                    {/* Thumbnail */}
-                                    <div className="w-full h-32 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-md overflow-hidden mb-3">
-                                        <img
-                                            src={media.url}
-                                            alt={media.name}
-                                            className="object-contain max-h-full"
-                                        />
-                                    </div>
-
-                                    {/* Name & Type */}
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                                            {media.name}
-                                        </h3>
-                                        <span
-                                            className={`px-2 py-0.5 text-xs font-medium rounded-full ${media.type === "IMAGE"
-                                                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                                                    : media.type === "VIDEO"
-                                                        ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                                                        : media.type === "AUDIO"
-                                                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                                                            : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
-                                                }`}
-                                        >
-                                            {media.type}
-                                        </span>
-                                    </div>
-
-                                    {/* Description */}
-                                    {media.description && (
-                                        <p className="mt-2 text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
-                                            {media.description}
-                                        </p>
-                                    )}
-
-                                    {/* Action buttons */}
-                                    <div className="mt-auto flex justify-between gap-2 pt-3">
-                                        <button
-                                            // onClick={() => handleEdit(media)}
-                                            className="w-1/2 px-3 py-1 text-xs font-medium bg-blue-500 text-white rounded hover:bg-blue-600"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            // onClick={() => handleDelete(media.id)}
-                                            className="w-1/2 px-3 py-1 text-xs font-medium bg-red-500 text-white rounded hover:bg-red-600"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
+                        <MediaTable
+                            media={media}
+                            handleEdit={handleEdit}
+                            handleDelete={handleDelete}
+                        />
                     )}
                 </div>
 
@@ -213,7 +207,6 @@ export default function Media() {
                     <div className="p-6">
                         <Form {...form}>
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                                {/* Name */}
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -233,7 +226,6 @@ export default function Media() {
                                     )}
                                 />
 
-                                {/* Description */}
                                 <FormField
                                     control={form.control}
                                     name="description"
@@ -252,7 +244,6 @@ export default function Media() {
                                     )}
                                 />
 
-                                {/* Type */}
                                 <FormField
                                     control={form.control}
                                     name="type"
@@ -278,11 +269,10 @@ export default function Media() {
                                     )}
                                 />
 
-                                {/* Drag & Drop Upload */}
                                 <div
                                     className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer ${isDragging
-                                            ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                                            : "border-gray-300 dark:border-gray-600"
+                                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                                        : "border-gray-300 dark:border-gray-600"
                                         }`}
                                     onDragOver={(e) => {
                                         e.preventDefault();
@@ -313,15 +303,13 @@ export default function Media() {
                                     />
                                 </div>
 
-                                {/* Backend Error */}
                                 {backendError && (
                                     <p className="text-red-500 text-sm">{backendError}</p>
                                 )}
 
-                                {/* Submit */}
                                 <button
                                     type="submit"
-                                    disabled={loading}
+                                    disabled={loading || !form.formState.isValid}
                                     className="inline-flex justify-center rounded-md border border-transparent bg-[#2563eb] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2563eb]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
                                 >
                                     {loading ? "Uploading..." : "Upload"}
@@ -331,6 +319,81 @@ export default function Media() {
                     </div>
                 </div>
             </div>
+        </div>
+    );
+}
+
+export function MediaTable({
+    media,
+    handleEdit,
+    handleDelete,
+}: {
+    media: MediaData[];
+    handleEdit: (media: MediaData) => void;
+    handleDelete: (id: number) => void;
+}) {
+    return (
+        <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[80px]">Preview</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {media.length > 0 ? (
+                        media.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell>
+                                    {item.url ? (
+                                        <img
+                                            src={item.url}
+                                            alt={item.name}
+                                            className="h-12 w-12 object-cover rounded"
+                                        />
+                                    ) : (
+                                        <div className="h-12 w-12 bg-gray-200 dark:bg-gray-600 rounded" />
+                                    )}
+                                </TableCell>
+                                <TableCell className="font-medium">{item.name}</TableCell>
+                                <TableCell>{item.type}</TableCell>
+                                <TableCell className="truncate max-w-xs">
+                                    {item.description}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <div className="flex justify-end gap-2">
+                                        <Button
+                                            size="sm"
+                                            variant="secondary"
+                                            onClick={() => handleEdit(item)}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <GlobalDialog
+                                            children="Delete"
+                                            title="Delete Media"
+                                            description="Delete media details"
+                                            action={() => item.id && handleDelete(item.id)}
+                                            confirmText="Delete"
+                                        />
+                                    </div>
+                                </TableCell>
+
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={5} className="text-center py-6 text-gray-500">
+                                No media available
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
         </div>
     );
 }

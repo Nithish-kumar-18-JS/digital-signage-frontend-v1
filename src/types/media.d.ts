@@ -14,8 +14,8 @@ export interface MediaData {
     id?: number;
     name: string;
     description?: string;
-    type?: string;
-    url: string;
+    type?: "IMAGE" | "VIDEO" | "AUDIO" | "HTML";
+    url?: string;
     durationSeconds?: number;
     uploadedById?: number;
     createdAt?: string;
