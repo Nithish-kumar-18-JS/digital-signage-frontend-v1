@@ -82,16 +82,16 @@ export enum MediaType {
   }
   
   export interface Playlist {
-    id: number;
+    id?: number;
     name: string;
     description?: string;
-    createdById: number;
-    createdAt: Date;
+    createdById?: number;
+    createdAt?: Date;
     updatedAt: Date;
   
-    createdBy: User;
+    createdBy?: User;
     items: PlaylistItem[];
-    schedulePlaylists: SchedulePlaylist[];
+    schedulePlaylists?: SchedulePlaylist[];
   }
   
   export interface PlaylistItem {
