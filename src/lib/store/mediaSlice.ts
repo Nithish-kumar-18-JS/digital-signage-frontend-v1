@@ -1,19 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllMedia, addMedia, updateMedia, deleteMedia, searchMedia } from "@/api/media/media";
-import { MediaData } from "@/types/media";
-
+import { Media } from "@/types/index";
 // Async thunks for CRUD
 export const fetchMediaSlice = createAsyncThunk("media/fetchMedia", async () => {
   const res = await getAllMedia();
   return res;
 });
 
-export const addMediaSlice = createAsyncThunk("media/addMedia", async (post:MediaData) => {
+export const addMediaSlice = createAsyncThunk("media/addMedia", async (post:Media) => {
   const res = await addMedia(post);
   return res;
 });
 
-export const updateMediaSlice = createAsyncThunk("media/updateMedia", async (post: MediaData) => {
+export const updateMediaSlice = createAsyncThunk("media/updateMedia", async (post: Media) => {
   if (!post.id) {
     throw new Error("Cannot update media without an ID");
   }
@@ -52,11 +51,11 @@ const mediaSlice = createSlice({
         state.items.push(action.payload);
       })
       .addCase(updateMediaSlice.fulfilled, (state: any, action: any) => {
-        const index = state.items.findIndex((p:MediaData) => p.id === action.payload.id);
+        const index = state.items.findIndex((p:Media) => p.id === action.payload.id);
         if (index !== -1) state.items[index] = action.payload;
       })
       .addCase(deleteMediaSlice.fulfilled, (state: any, action: any) => {
-        state.items = state.items.filter((p:MediaData) => p.id !== action.payload);
+        state.items = state.items.filter((p:Media) => p.id !== action.payload);
       })
       .addCase(searchMediaSlice.fulfilled, (state: any, action: any) => {
         state.items = action.payload;

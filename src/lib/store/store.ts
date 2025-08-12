@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import mediaReducer from "./mediaSlice";
+import playlistReducer from "./playlistSlice";
 
 export const store = configureStore({
   reducer: {
     media: mediaReducer,
+    playlist: playlistReducer,
   },
 });
 export type RootState = ReturnType<typeof store.getState>;

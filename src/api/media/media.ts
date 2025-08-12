@@ -1,5 +1,5 @@
 import apiClient from "@/api/axois/axiosInterceptor";
-import { MediaData } from "@/types/media";
+import { Media } from "@/types";
 
 const uploadMedia = async (file: File) => {
     try {
@@ -18,7 +18,7 @@ const uploadMedia = async (file: File) => {
     }
 };
 
-const addMedia = async (data:MediaData) => {
+const addMedia = async (data:Media) => {
     try {
         const response = await apiClient.post(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/media`,
@@ -67,7 +67,7 @@ const deleteMedia = async (id: number) => {
     }
 }
 
-const updateMedia = async (id: number, data: MediaData) => {
+const updateMedia = async (id: number, data: Media) => {
     try {
         const response = await apiClient.put(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/media/${id}`,

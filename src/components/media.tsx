@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from "react";
-import { MediaData } from "@/types/media";
+import { Media } from "@/types/index";
 import {
     Table,
     TableBody,
@@ -48,7 +48,7 @@ const formValidationSchema = z.object({
 
 type FormValues = z.infer<typeof formValidationSchema>;
 
-export default function Media() {
+export default function MediaPage() {
     const form = useForm<FormValues>({
         resolver: zodResolver(formValidationSchema),
         defaultValues: {
@@ -119,9 +119,9 @@ export default function Media() {
                 delete (data as any).url;
             }
             if(data.id){
-                await dispatch(updateMediaSlice(data as MediaData));
+                await dispatch(updateMediaSlice(data as Media));
             }else{
-                await dispatch(addMediaSlice(data as MediaData));
+                await dispatch(addMediaSlice(data as Media));
             }
             setPreviewUrl(null);
             form.reset();
@@ -134,14 +134,15 @@ export default function Media() {
         }
     };
 
-    const handleEdit = (media: MediaData) => {
+    const handleEdit = (media: Media) => {
         setPreviewUrl(media.url || null);
+        const { id, ...rest } = media;
         form.reset({
-            id: media.id,
-            ...media,
-            type: media.type as "IMAGE" | "VIDEO" | "AUDIO" | "HTML" | undefined
+          id, // keep id explicitly
+          ...rest,
+          type: media.type as "IMAGE" | "VIDEO" | "AUDIO" | "HTML" | undefined
         });
-    };
+      };
 
     const handleDelete = async (id: number) => {
         try {
@@ -328,8 +329,8 @@ export function MediaTable({
     handleEdit,
     handleDelete,
 }: {
-    media: MediaData[];
-    handleEdit: (media: MediaData) => void;
+    media: Media[];
+    handleEdit: (media: Media) => void;
     handleDelete: (id: number) => void;
 }) {
     return (
