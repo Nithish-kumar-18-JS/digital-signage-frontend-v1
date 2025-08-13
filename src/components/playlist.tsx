@@ -394,6 +394,7 @@ export function PlaylistTable({
             <Table>
                 <TableHeader>
                     <TableRow>
+                        <TableHead className="w-[80px]">S.No</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Description</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
@@ -401,8 +402,9 @@ export function PlaylistTable({
                 </TableHeader>
                 <TableBody>
                     {playlist.length > 0 ? (
-                        playlist.map((item) => (
+                        playlist.map((item,index) => (
                             <TableRow key={item.id}>
+                                <TableCell>{index + 1}</TableCell>
                                 <TableCell className="font-medium">{item.name}</TableCell>
                                 <TableCell className="truncate max-w-xs">
                                     {item.description}

@@ -135,6 +135,8 @@ export enum MediaType {
   
   export interface Schedule {
     id: number;
+    name: string;
+    description?: string;
     screenId: number;
     assignedAt: Date;
     startTime?: Date;

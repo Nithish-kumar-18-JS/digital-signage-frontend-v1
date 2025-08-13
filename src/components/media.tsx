@@ -338,6 +338,7 @@ export function MediaTable({
             <Table>
                 <TableHeader>
                     <TableRow>
+                        <TableHead className="w-[80px]">S.No</TableHead>
                         <TableHead className="w-[80px]">Preview</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Type</TableHead>
@@ -347,8 +348,9 @@ export function MediaTable({
                 </TableHeader>
                 <TableBody>
                     {media.length > 0 ? (
-                        media.map((item) => (
+                        media.map((item, index) => (
                             <TableRow key={item.id}>
+                                <TableCell>{index + 1}</TableCell>
                                 <TableCell>
                                     {item.url ? (
                                         <img
