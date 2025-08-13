@@ -143,7 +143,7 @@ export enum MediaType {
     endTime?: Date;
     daysOfWeek?: string;
     repeatDaily: boolean;
-    priority: string;
+    priority: "high" | "medium" | "low";
     createdById: number;
   
     createdBy: User;

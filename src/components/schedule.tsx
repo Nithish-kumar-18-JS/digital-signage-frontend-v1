@@ -112,8 +112,8 @@ export default function SchedulePage() {
             const scheduleData: Partial<Schedule> = {
                 ...data,
                 id: data.id ?? undefined,
-                startTime: data.startTime || undefined,
-                endTime: data.endTime || undefined,
+                startTime: data.startTime ? new Date(data.startTime) : undefined,
+                endTime: data.endTime ? new Date(data.endTime) : undefined,
                 daysOfWeek: data.daysOfWeek || undefined,
             };
 
@@ -134,7 +134,7 @@ export default function SchedulePage() {
     };
 
     const handleEdit = (schedule: Schedule) => {
-        const { id, startTime, endTime, daysOfWeek, ...rest } = schedule;
+        const { id, startTime, endTime, daysOfWeek, priority, repeatDaily, ...rest } = schedule;
         form.reset({
             id,
             startTime: startTime
@@ -144,6 +144,8 @@ export default function SchedulePage() {
                 ? new Date(endTime).toISOString().slice(0, 16)
                 : "",
             daysOfWeek: daysOfWeek || "",
+            priority: priority || "high" as "high" | "medium" | "low",
+            repeatDaily: repeatDaily || false,
             ...rest,
         });
     };
