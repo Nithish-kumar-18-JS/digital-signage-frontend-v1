@@ -143,7 +143,7 @@ export enum MediaType {
     endTime?: Date;
     daysOfWeek?: string;
     repeatDaily: boolean;
-    priority: number;
+    priority: string;
     createdById: number;
   
     createdBy: User;
@@ -160,3 +160,15 @@ export enum MediaType {
     playlist: Playlist;
   }
   
+
+  export interface LoginData {
+    email: string;
+    password: string;
+  }
+    
+  export interface RegisterData {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState, useMemo } from "react";
 import { Schedule } from "@/types/index";
@@ -10,7 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import debounce from 'lodash/debounce';
+import debounce from "lodash/debounce";
 import {
     Form,
     FormControl,
@@ -29,11 +29,17 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useDispatch, useSelector } from "react-redux"; 
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/lib/store/store";
 import { Button } from "./ui/button";
 import { GlobalDialog } from "./modals/globalDialog";
-import { fetchScheduleSlice, searchScheduleSlice, updateScheduleSlice, deleteScheduleSlice, addScheduleSlice } from "@/lib/store/scheduleSlice";
+import {
+    fetchScheduleSlice,
+    searchScheduleSlice,
+    updateScheduleSlice,
+    deleteScheduleSlice,
+    addScheduleSlice,
+} from "@/lib/store/scheduleSlice";
 
 const formValidationSchema = z.object({
     id: z.number().nullable().optional(),
@@ -43,14 +49,14 @@ const formValidationSchema = z.object({
     endTime: z.string().optional(),
     daysOfWeek: z.string().optional(),
     repeatDaily: z.boolean().optional(),
-    priority: z.number().optional(),
+    priority: z.enum(["high", "medium", "low"]).optional(),
     playlistId: z.number().optional(),
     screenId: z.number().optional(),
 });
 
 type FormValues = z.infer<typeof formValidationSchema>;
 
-export default function MediaPage() {
+export default function SchedulePage() {
     const form = useForm<FormValues>({
         resolver: zodResolver(formValidationSchema),
         defaultValues: {
@@ -60,18 +66,24 @@ export default function MediaPage() {
             endTime: "",
             daysOfWeek: "",
             repeatDaily: false,
-            priority: 0,
-            playlistId: 0,
-            screenId: 0,
+            priority: undefined,
+            playlistId: undefined,
+            screenId: undefined,
         },
     });
 
     const [backendError, setBackendError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
 
     const dispatch: AppDispatch = useDispatch();
     const schedule = useSelector((state: RootState) => state.schedule.items);
+
+    // TODO: Replace with real screens from store or API
+    const screens = [
+        { id: 1, name: "Screen 1" },
+        { id: 2, name: "Screen 2" },
+    ];
 
     // Fetch on mount
     useEffect(() => {
@@ -80,9 +92,10 @@ export default function MediaPage() {
 
     // Debounced search
     const debouncedSearch = useMemo(
-        () => debounce((value: string) => {
-            dispatch(searchScheduleSlice(value));
-        }, 500),
+        () =>
+            debounce((value: string) => {
+                dispatch(searchScheduleSlice(value));
+            }, 500),
         [dispatch]
     );
 
@@ -99,8 +112,8 @@ export default function MediaPage() {
             const scheduleData: Partial<Schedule> = {
                 ...data,
                 id: data.id ?? undefined,
-                startTime: data.startTime ? new Date(data.startTime) : undefined,
-                endTime: data.endTime ? new Date(data.endTime) : undefined,
+                startTime: data.startTime || undefined,
+                endTime: data.endTime || undefined,
                 daysOfWeek: data.daysOfWeek || undefined,
             };
 
@@ -112,7 +125,8 @@ export default function MediaPage() {
             form.reset();
             dispatch(fetchScheduleSlice());
         } catch (error: any) {
-            const errMsg = error?.response?.data?.message || "Failed to upload media";
+            const errMsg =
+                error?.response?.data?.message || "Failed to save schedule";
             setBackendError(errMsg);
         } finally {
             setLoading(false);
@@ -123,8 +137,12 @@ export default function MediaPage() {
         const { id, startTime, endTime, daysOfWeek, ...rest } = schedule;
         form.reset({
             id,
-            startTime: startTime ? new Date(startTime).toISOString().slice(0, 16) : "",
-            endTime: endTime ? new Date(endTime).toISOString().slice(0, 16) : "",
+            startTime: startTime
+                ? new Date(startTime).toISOString().slice(0, 16)
+                : "",
+            endTime: endTime
+                ? new Date(endTime).toISOString().slice(0, 16)
+                : "",
             daysOfWeek: daysOfWeek || "",
             ...rest,
         });
@@ -135,29 +153,34 @@ export default function MediaPage() {
             await dispatch(deleteScheduleSlice(id));
             dispatch(fetchScheduleSlice());
         } catch (error: any) {
-            console.error("Error deleting media:", error?.response || error);
+            console.error("Error deleting schedule:", error?.response || error);
         }
     };
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(e.target.value);
-        debouncedSearch(e.target.value);
+        const value = e.target.value;
+        setSearchQuery(value);
+        if (value.trim()) {
+            debouncedSearch(value);
+        }
     };
 
     return (
         <div>
-            <h1 className="text-2xl font-semibold dark:text-white">Media Library</h1>
+            <h1 className="text-2xl font-semibold dark:text-white">
+                Schedule Jobs
+            </h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
                 <div className="w-full h-[500px] max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg p-4">
                     <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
-                        Media
+                        Schedule list
                     </h1>
                     <div className="flex flex-col gap-4">
                         <div className="flex items-center gap-2">
                             <input
                                 type="text"
-                                placeholder="Search media..."
+                                placeholder="Search schedule..."
                                 className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
                                 onChange={handleSearch}
                                 value={searchQuery}
@@ -182,12 +205,17 @@ export default function MediaPage() {
                 {/* Right column */}
                 <div className="w-full max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
                     <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
-                        <h1 className="text-xl font-semibold dark:text-white">Upload Media</h1>
+                        <h1 className="text-xl font-semibold dark:text-white">
+                            Create a Schedule Job
+                        </h1>
                     </div>
 
                     <div className="p-6">
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-5"
+                            >
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -197,7 +225,7 @@ export default function MediaPage() {
                                             <FormControl>
                                                 <input
                                                     type="text"
-                                                    placeholder="Enter media name"
+                                                    placeholder="Enter schedule name"
                                                     {...field}
                                                     className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
                                                 />
@@ -215,7 +243,7 @@ export default function MediaPage() {
                                             <FormLabel>Description</FormLabel>
                                             <FormControl>
                                                 <textarea
-                                                    placeholder="Enter media description"
+                                                    placeholder="Enter schedule description"
                                                     {...field}
                                                     className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
                                                 />
@@ -231,14 +259,26 @@ export default function MediaPage() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Screen</FormLabel>
-                                            <Select onValueChange={(v) => field.onChange(Number(v))} value={field.value?.toString()}>
+                                            <Select
+                                                onValueChange={(v) =>
+                                                    field.onChange(Number(v))
+                                                }
+                                                value={field.value?.toString()}
+                                            >
                                                 <FormControl>
                                                     <SelectTrigger className="w-[180px]">
-                                                        <SelectValue placeholder="Screen" />
+                                                        <SelectValue placeholder="Select Screen" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {/* Dynamically map your screens here */}
+                                                    {screens.map((screen) => (
+                                                        <SelectItem
+                                                            key={screen.id}
+                                                            value={screen.id.toString()}
+                                                        >
+                                                            {screen.name}
+                                                        </SelectItem>
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
@@ -289,12 +329,39 @@ export default function MediaPage() {
                                         <FormItem>
                                             <FormLabel>Days of Week</FormLabel>
                                             <FormControl>
-                                                <input
-                                                    type="text"
-                                                    placeholder="e.g. Monday,Wednesday,Friday"
-                                                    {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
-                                                />
+                                                <Select
+                                                    onValueChange={(v) =>
+                                                        field.onChange(v)
+                                                    }
+                                                    value={field.value}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select days of week" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Monday">
+                                                            Monday
+                                                        </SelectItem>
+                                                        <SelectItem value="Tuesday">
+                                                            Tuesday
+                                                        </SelectItem>
+                                                        <SelectItem value="Wednesday">
+                                                            Wednesday
+                                                        </SelectItem>
+                                                        <SelectItem value="Thursday">
+                                                            Thursday
+                                                        </SelectItem>
+                                                        <SelectItem value="Friday">
+                                                            Friday
+                                                        </SelectItem>
+                                                        <SelectItem value="Saturday">
+                                                            Saturday
+                                                        </SelectItem>
+                                                        <SelectItem value="Sunday">
+                                                            Sunday
+                                                        </SelectItem>
+                                                    </SelectContent>
+                                                </Select>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -305,13 +372,17 @@ export default function MediaPage() {
                                     control={form.control}
                                     name="repeatDaily"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="flex items-center gap-2">
                                             <FormLabel>Repeat Daily</FormLabel>
                                             <FormControl>
                                                 <input
                                                     type="checkbox"
                                                     checked={field.value || false}
-                                                    onChange={(e) => field.onChange(e.target.checked)}
+                                                    onChange={(e) =>
+                                                        field.onChange(
+                                                            e.target.checked
+                                                        )
+                                                    }
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -326,11 +397,25 @@ export default function MediaPage() {
                                         <FormItem>
                                             <FormLabel>Priority</FormLabel>
                                             <FormControl>
-                                                <input
-                                                    type="number"
-                                                    {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
-                                                />
+                                                <Select
+                                                    value={field.value}
+                                                    onValueChange={field.onChange}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select priority" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="high">
+                                                            High
+                                                        </SelectItem>
+                                                        <SelectItem value="medium">
+                                                            Medium
+                                                        </SelectItem>
+                                                        <SelectItem value="low">
+                                                            Low
+                                                        </SelectItem>
+                                                    </SelectContent>
+                                                </Select>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -338,15 +423,19 @@ export default function MediaPage() {
                                 />
 
                                 {backendError && (
-                                    <p className="text-red-500 text-sm">{backendError}</p>
+                                    <p className="text-red-500 text-sm">
+                                        {backendError}
+                                    </p>
                                 )}
 
                                 <button
                                     type="submit"
-                                    disabled={loading || !form.formState.isValid}
+                                    disabled={
+                                        loading || !form.formState.isValid
+                                    }
                                     className="inline-flex justify-center rounded-md border border-transparent bg-[#2563eb] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2563eb]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
                                 >
-                                    {loading ? "Uploading..." : "Upload"}
+                                    {loading ? "Saving..." : "Save"}
                                 </button>
                             </form>
                         </Form>
@@ -389,17 +478,33 @@ export function ScheduleTable({
                             <TableRow key={item.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.name}</TableCell>
-                                <TableCell>{item.description || "—"}</TableCell>
-                                <TableCell>{item.screen?.name || "—"}</TableCell>
+                                <TableCell>
+                                    {item.description || "—"}
+                                </TableCell>
+                                <TableCell>
+                                    {item.screen?.name || "—"}
+                                </TableCell>
                                 <TableCell>{item.priority ?? "—"}</TableCell>
-                                <TableCell>{item.repeatDaily ? "Yes" : "No"}</TableCell>
                                 <TableCell>
-                                    {item.startTime ? new Date(item.startTime).toLocaleString() : "—"}
+                                    {item.repeatDaily ? "Yes" : "No"}
                                 </TableCell>
                                 <TableCell>
-                                    {item.endTime ? new Date(item.endTime).toLocaleString() : "—"}
+                                    {item.startTime
+                                        ? new Date(
+                                              item.startTime
+                                          ).toLocaleString()
+                                        : "—"}
                                 </TableCell>
-                                <TableCell>{item.daysOfWeek || "—"}</TableCell>
+                                <TableCell>
+                                    {item.endTime
+                                        ? new Date(
+                                              item.endTime
+                                          ).toLocaleString()
+                                        : "—"}
+                                </TableCell>
+                                <TableCell>
+                                    {item.daysOfWeek || "—"}
+                                </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <Button
@@ -411,9 +516,12 @@ export function ScheduleTable({
                                         </Button>
                                         <GlobalDialog
                                             children="Delete"
-                                            title="Delete Media"
-                                            description="Delete media details"
-                                            action={() => item.id && handleDelete(item.id)}
+                                            title="Delete Schedule"
+                                            description="Are you sure you want to delete this schedule?"
+                                            action={() =>
+                                                item.id &&
+                                                handleDelete(item.id)
+                                            }
                                             confirmText="Delete"
                                         />
                                     </div>
@@ -422,8 +530,11 @@ export function ScheduleTable({
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={10} className="text-center py-6 text-gray-500">
-                                No media available
+                            <TableCell
+                                colSpan={10}
+                                className="text-center py-6 text-gray-500"
+                            >
+                                No schedule available
                             </TableCell>
                         </TableRow>
                     )}

@@ -1,6 +1,6 @@
 'use client'
 
-import { LoginData } from "@/types/login"
+import { LoginData } from "@/types"
 import { useForm } from "react-hook-form"
 import { auth } from "@/api"
 import { zodResolver } from "@hookform/resolvers/zod"
