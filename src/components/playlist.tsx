@@ -61,6 +61,7 @@ import { GlobalDialog } from "./modals/globalDialog";
 import clsx from "clsx";
 import { GripVertical } from "lucide-react";
 import { fetchMediaSlice } from "@/lib/store/mediaSlice";
+import { motion } from "framer-motion";
 
 
 const formValidationSchema = z.object({
@@ -186,7 +187,16 @@ export default function PlaylistPage() {
             <h1 className="text-2xl font-semibold dark:text-white">Playlists Library</h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg p-4 custom-scroll">
+                <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 2 * 0.1, // staggered effect
+                  ease: "easeOut",
+                }}
+                >
+                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg p-4 custom-scroll transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
                     <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
                         Playlists
                     </h1>
@@ -215,9 +225,18 @@ export default function PlaylistPage() {
                         />
                     )}
                 </div>
-
+                </motion.div>
                 {/* Right column */}
-                <div className="w-full max-h-[600px] custom-scroll overflow-y-auto custom-background border custom-border rounded-lg shadow-lg ">
+                <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 2 * 0.1, // staggered effect
+                  ease: "easeOut",
+                }}
+                >
+                <div className="w-full h-[600px] max-h-[600px] custom-scroll overflow-y-auto custom-background border custom-border rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
                     <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
                         <h1 className="text-xl font-semibold dark:text-white">Playlist Form</h1>
                     </div>
@@ -344,6 +363,7 @@ export default function PlaylistPage() {
                         </Form>
                     </div>
                 </div>
+                </motion.div>
             </div>
         </div>
     );

@@ -104,7 +104,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
       {/* Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute -right-3 top-8 bg-[#FAFAFA] dark:bg-[#222222] rounded-full shadow p-1 cursor-pointer hover:scale-105 transition-transform"
+        className="absolute -right-3 top-8 rounded-full shadow p-1 cursor-pointer hover:scale-105 transition-transform"
       >
         {isOpen ? (
           <LucideChevronLeftCircle className="h-6 w-6 text-gray-600 dark:text-gray-300" />

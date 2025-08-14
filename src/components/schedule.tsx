@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Schedule } from "@/types/index";
+import { Schedule, Screen } from "@/types/index";
 import {
     Table,
     TableBody,
@@ -40,6 +40,7 @@ import {
     deleteScheduleSlice,
     addScheduleSlice,
 } from "@/lib/store/scheduleSlice";
+import { fetchScreenSlice } from "@/lib/store/screenSlice";
 
 const formValidationSchema = z.object({
     id: z.number().nullable().optional(),
@@ -78,16 +79,14 @@ export default function SchedulePage() {
 
     const dispatch: AppDispatch = useDispatch();
     const schedule = useSelector((state: RootState) => state.schedule.items);
+    const screens = useSelector((state: RootState) => state.screen.items);
 
-    // TODO: Replace with real screens from store or API
-    const screens = [
-        { id: 1, name: "Screen 1" },
-        { id: 2, name: "Screen 2" },
-    ];
+
 
     // Fetch on mount
     useEffect(() => {
         dispatch(fetchScheduleSlice());
+        dispatch(fetchScreenSlice());
     }, [dispatch]);
 
     // Debounced search
@@ -273,7 +272,7 @@ export default function SchedulePage() {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {screens.map((screen) => (
+                                                    {screens.map((screen: Screen) => (
                                                         <SelectItem
                                                             key={screen.id}
                                                             value={screen.id.toString()}

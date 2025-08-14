@@ -37,7 +37,7 @@ const formValidationSchema = z.object({
     deviceId: z.string().min(1, "Device ID is required"),
     status: z.enum(["online", "offline", "inactive"]), // adjust as per your enum
     resolution: z.string().optional(),
-    orientation: z.enum(["landscape", "portrait"]), // adjust as per your type
+    orientation: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formValidationSchema>;
@@ -50,7 +50,7 @@ export default function ScreenPage() {
             description: "",
             deviceId: "",
             status: "offline",
-            resolution: "",
+            resolution: "1920x1080",
             orientation: "landscape",
         },
     });
