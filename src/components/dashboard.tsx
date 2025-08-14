@@ -37,14 +37,14 @@ export default function Dashboard() {
                 {insights.map((insight, index) => (
                     <div
                         key={index}
-                        className="rounded-lg  dark:bg-[#222222] shadow-lg p-4 flex items-center gap-4"
+                        className="rounded-lg border dark:border-slate-500 shadow-lg p-4 flex items-center gap-4"
                     >
-                        <div className="w-[80px] h-[80px] flex items-center justify-center rounded-full bg-[#f5f5f5] dark:bg-[#3a3a3a]">
+                        <div className="w-[80px] h-[80px] flex items-center justify-center rounded-full">
                             <Image src={insight.icon} alt={insight.name} width={40} height={40} />
                         </div>
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-sm dark:text-white">{insight.name}</h1>
-                            <p className="text-3xl font-bold dark:text-white">{insight.value}</p>
+                            <h1 className="text-sm">{insight.name}</h1>
+                            <p className="text-3xl font-bold">{insight.value}</p>
                             <p className="text-sm dark:text-white">{insight.change}</p>
                         </div>
                     </div>
@@ -53,7 +53,7 @@ export default function Dashboard() {
             {/* Container 2 */}
             <div className="grid gap-6 mt-6 [grid-template-columns:2fr_1fr]">
                 {/* Left column */}
-                <div className="w-full h-[450px] bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
+                <div className="w-full h-[450px] border dark:border-slate-500 rounded-lg shadow-lg">
                     {/* Recent Activity content */}
                     <div className="p-4">
                         <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">Recent Activity</h1>
@@ -65,7 +65,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Right column */}
-                <div className="w-full h-[450px] bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
+                <div className="w-full h-[450px] border dark:border-slate-500 rounded-lg shadow-lg">
                     {/* System Health content */}
                     <div className="p-4">
                         <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">System Health</h1>

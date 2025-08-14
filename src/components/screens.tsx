@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { Screen, ScreenStatus } from "@/types/index";
+import { motion } from "framer-motion";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -26,7 +27,7 @@ import {
     deleteScreenSlice,
     addScreenSlice,
 } from "@/lib/store/screenSlice";
-import { Edit, Monitor, Trash2 } from "lucide-react";
+import { Clock, Cpu, Edit, Maximize2, Monitor, Repeat, Trash2 } from "lucide-react";
 
 // Form validation schema for Screen
 const formValidationSchema = z.object({
@@ -137,7 +138,7 @@ export default function ScreenPage() {
             </h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg p-4">
+                <div className="w-full h-[500px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg p-4 custom-scroll">
                     <h1 className="text-xl font-semibold dark:text-white border-b pb-2">
                         Screen List
                     </h1>
@@ -166,7 +167,7 @@ export default function ScreenPage() {
                 </div>
 
                 {/* Right column */}
-                <div className="w-full max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
+                <div className="w-full max-h-[500px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg custom-scroll">
                     <div className="p-4 border-b">
                         <h1 className="text-xl font-semibold dark:text-white">
                             Create / Edit Screen
@@ -182,7 +183,7 @@ export default function ScreenPage() {
                                         <FormItem>
                                             <FormLabel>Name</FormLabel>
                                             <FormControl>
-                                                <input {...field} placeholder="Enter screen name" className="input" />
+                                                <input className="border custom-border rounded-lg h-10 p-2" {...field} placeholder="Enter screen name" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -196,7 +197,7 @@ export default function ScreenPage() {
                                         <FormItem>
                                             <FormLabel>Description</FormLabel>
                                             <FormControl>
-                                                <textarea {...field} placeholder="Enter description" className="input" />
+                                                <textarea {...field} placeholder="Enter description" className="border custom-border rounded-lg h-30 p-2" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -210,7 +211,7 @@ export default function ScreenPage() {
                                         <FormItem>
                                             <FormLabel>Device ID</FormLabel>
                                             <FormControl>
-                                                <input {...field} placeholder="Enter device ID" className="input" />
+                                                <input {...field} placeholder="Enter device ID" className="border custom-border rounded-lg h-10 p-2" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -269,7 +270,7 @@ export default function ScreenPage() {
                                         <FormItem>
                                             <FormLabel>Resolution</FormLabel>
                                             <FormControl>
-                                                <input {...field} placeholder="e.g. 1920x1080" className="input" />
+                                                <input {...field} placeholder="e.g. 1920x1080" className="border custom-border rounded-lg h-10 p-2" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -283,7 +284,7 @@ export default function ScreenPage() {
                                 <button
                                     type="submit"
                                     disabled={loading || !form.formState.isValid}
-                                    className="btn-primary"
+                                    className="inline-flex justify-center rounded-md border border-transparent bg-[#2563eb] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2563eb]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
                                 >
                                     {loading ? "Saving..." : "Save"}
                                 </button>
@@ -308,31 +309,40 @@ export function ScreenGrid({
     const getStatusColor = (status: string) => {
       switch (status?.toLowerCase()) {
         case "online":
-          return "bg-green-500/20 text-green-600";
+          return "bg-green-500/20 text-green-400 border border-green-500/30 shadow-[0_0_10px_rgba(34,197,94,0.3)]";
         case "offline":
-          return "bg-red-500/20 text-red-600";
+          return "bg-red-500/20 text-red-400 border border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.3)]";
         default:
-          return "bg-yellow-500/20 text-yellow-600";
+          return "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 shadow-[0_0_10px_rgba(234,179,8,0.3)]";
       }
     };
   
     return (
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-        {screens.map((screen) => (
-          <div
+      <div className="grid mt-6 gap-6 sm:grid-cols-2 lg:grid-cols-2">
+        {screens.map((screen, index) => (
+          <motion.div
             key={screen.id}
-            className="group relative overflow-hidden rounded-2xl bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg shadow-lg border border-gray-200 dark:border-gray-700 p-5 transition-transform hover:-translate-y-1 hover:shadow-xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.4,
+              delay: index * 0.1, // staggered effect
+              ease: "easeOut",
+            }}
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/40 to-white/10 dark:from-gray-800/40 dark:to-gray-900/10 backdrop-blur-lg shadow-lg border border-white/20 dark:border-gray-700 p-5 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                <div className="p-2 rounded-xl bg-blue-500/10 text-blue-500">
                   <Monitor size={20} />
                 </div>
-                <h2 className="text-lg font-semibold truncate">{screen.name}</h2>
+                <h2 className="text-lg font-semibold tracking-tight truncate">
+                  {screen.name}
+                </h2>
               </div>
               <span
-                className={`px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
                   screen.status
                 )}`}
               >
@@ -341,29 +351,28 @@ export function ScreenGrid({
             </div>
   
             {/* Info */}
-            <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-              <p>
-                <span className="font-medium">Device ID:</span>{" "}
-                {screen.deviceId || "—"}
+            <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <p className="flex items-center gap-1">
+                <Cpu size={14} className="text-gray-500" />
+                <span className="font-medium">Device ID:</span> {screen.deviceId || "—"}
               </p>
-              <p>
-                <span className="font-medium">Resolution:</span>{" "}
-                {screen.resolution || "—"}
+              <p className="flex items-center gap-1">
+                <Maximize2 size={14} className="text-gray-500" />
+                <span className="font-medium">Resolution:</span> {screen.resolution || "—"}
               </p>
-              <p>
-                <span className="font-medium">Orientation:</span>{" "}
-                {screen.orientation}
+              <p className="flex items-center gap-1">
+                <Repeat size={14} className="text-gray-500" />
+                <span className="font-medium">Orientation:</span> {screen.orientation}
               </p>
-              <p>
+              <p className="flex items-center gap-1">
+                <Clock size={14} className="text-gray-500" />
                 <span className="font-medium">Last Seen:</span>{" "}
-                {screen.lastSeen
-                  ? new Date(screen.lastSeen).toLocaleString()
-                  : "—"}
+                {screen.lastSeen ? new Date(screen.lastSeen).toLocaleString() : "—"}
               </p>
             </div>
   
             {/* Actions */}
-            <div className="flex justify-end gap-2 mt-5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex justify-end gap-2 mt-5 pt-3 border-t border-white/20 dark:border-gray-700">
               <Button
                 size="sm"
                 variant="secondary"
@@ -375,7 +384,7 @@ export function ScreenGrid({
               </Button>
               <GlobalDialog
                 children={
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-red-500">
                     <Trash2 size={16} />
                     Delete
                   </div>
@@ -386,7 +395,7 @@ export function ScreenGrid({
                 confirmText="Delete"
               />
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     );

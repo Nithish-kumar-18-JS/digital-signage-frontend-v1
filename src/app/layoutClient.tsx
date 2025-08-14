@@ -12,7 +12,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
 
   return (
     <Provider store={store}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeProvider attribute="class" defaultTheme="dark">
       <div className="min-h-screen flex">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div

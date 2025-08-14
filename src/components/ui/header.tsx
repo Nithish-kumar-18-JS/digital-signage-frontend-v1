@@ -20,7 +20,7 @@ export default function Header({ open }: HeaderProps) {
           .toUpperCase() + pathname.slice(2);
 
   return (
-    <div className={clsx("h-16 px-3 lg:px-6 xl:px-10 fixed top-0 flex items-center justify-end bg-[#ffffff] dark:bg-[#191919] transition-colors duration-200", open ? "w-[calc(100%-200px)]" : "w-full")}>
+    <div className={clsx("h-16 px-3 lg:px-6 xl:px-10 fixed top-0 flex items-center justify-end custom-background transition-colors duration-200", open ? "w-[calc(100%-200px)]" : "w-full")}>
       {/* Right-side controls */}
       <div className="flex w-full items-center gap-5 justify-end mr-[100px] ">
         <Image
@@ -30,7 +30,7 @@ export default function Header({ open }: HeaderProps) {
           height={30}
           className="border border-[#dcdcdc] rounded-full p-1 cursor-pointer dark:border-gray-600"
         />
-        <ModeToggle />
+        {/* <ModeToggle /> */}
       </div>
     </div>
   );

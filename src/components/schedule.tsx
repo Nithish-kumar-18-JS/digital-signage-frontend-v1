@@ -174,8 +174,8 @@ export default function SchedulePage() {
             </h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[500px] max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg p-4">
-                    <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
+                <div className="w-full h-[500px] max-h-[500px] overflow-y-auto custom-background border-gray-200 border dark:border-gray-600  rounded-lg shadow-lg p-4 custom-scroll">
+                    <h1 className="text-xl font-semibold dark:text-white pb-2">
                         Schedule list
                     </h1>
                     <div className="flex flex-col gap-4">
@@ -183,7 +183,7 @@ export default function SchedulePage() {
                             <input
                                 type="text"
                                 placeholder="Search schedule..."
-                                className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                className="block w-full rounded-md border fields-background px-3 py-2 text-sm"
                                 onChange={handleSearch}
                                 value={searchQuery}
                             />
@@ -205,8 +205,8 @@ export default function SchedulePage() {
                 </div>
 
                 {/* Right column */}
-                <div className="w-full max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
-                    <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
+                <div className="w-full max-h-[500px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg custom-scroll">
+                    <div className="p-4 border-b border-[#191919] dark:border-gray-600">
                         <h1 className="text-xl font-semibold dark:text-white">
                             Create a Schedule Job
                         </h1>
@@ -229,7 +229,7 @@ export default function SchedulePage() {
                                                     type="text"
                                                     placeholder="Enter schedule name"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -247,7 +247,7 @@ export default function SchedulePage() {
                                                 <textarea
                                                     placeholder="Enter schedule description"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -298,7 +298,7 @@ export default function SchedulePage() {
                                                 <input
                                                     type="datetime-local"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -316,7 +316,7 @@ export default function SchedulePage() {
                                                 <input
                                                     type="datetime-local"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -458,8 +458,8 @@ export function ScheduleTable({
     handleDelete: (id: number) => void;
 }) {
     return (
-        <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <Table>
+        <div className="rounded-md mt-6 border border-gray-200 dark:border-gray-700 overflow-hidden ">
+            <Table className="custom-scroll overflow-y-auto">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[80px]">S.No</TableHead>
@@ -477,7 +477,7 @@ export function ScheduleTable({
                 <TableBody>
                     {schedule.length > 0 ? (
                         schedule.map((item, index) => (
-                            <TableRow key={item.id}>
+                            <TableRow key={item.id} >
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell className="truncate max-w-xs">

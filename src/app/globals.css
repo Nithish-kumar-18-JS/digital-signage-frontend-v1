@@ -117,7 +117,10 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    /* @apply bg-background text-foreground; */
+    background: #2b5876; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #2b5876, #4e4376); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #2b5876, #4e4376); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   }
 }
 
@@ -125,10 +128,22 @@
   width: 5px;
 }
 .custom-scroll::-webkit-scrollbar-thumb {
-  background-color: #5a5a5a;
+  background-color: #a5a5a5;
   border-radius: 9999px;
 }
 .custom-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
+.custom-background {
+  background-color: transparent;
+}
+
+.custom-border {
+  background-color: transparent;
+  border-color: #888888;
+}
+
+.fields-background {
+  background-color: #0000004f;
+}

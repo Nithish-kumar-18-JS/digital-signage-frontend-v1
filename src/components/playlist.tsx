@@ -186,7 +186,7 @@ export default function PlaylistPage() {
             <h1 className="text-2xl font-semibold dark:text-white">Playlists Library</h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg p-4">
+                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg p-4 custom-scroll">
                     <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
                         Playlists
                     </h1>
@@ -195,7 +195,7 @@ export default function PlaylistPage() {
                             <input
                                 type="text"
                                 placeholder="Search playlist..."
-                                className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                className="block w-full rounded-md border custom-border fields-background fields-background px-3 py-2 text-sm"
                                 onChange={handleSearch}
                                 value={searchQuery}
                             />
@@ -217,7 +217,7 @@ export default function PlaylistPage() {
                 </div>
 
                 {/* Right column */}
-                <div className="w-full max-h-[600px] custom-scroll overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
+                <div className="w-full max-h-[600px] custom-scroll overflow-y-auto custom-background border custom-border rounded-lg shadow-lg ">
                     <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
                         <h1 className="text-xl font-semibold dark:text-white">Playlist Form</h1>
                     </div>
@@ -236,7 +236,7 @@ export default function PlaylistPage() {
                                                     type="text"
                                                     placeholder="Enter playlist name"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -254,7 +254,7 @@ export default function PlaylistPage() {
                                                 <textarea
                                                     placeholder="Enter playlist description"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -268,13 +268,13 @@ export default function PlaylistPage() {
                                         <CommandInput placeholder="Search media..." />
                                         <CommandEmpty>No media found.</CommandEmpty>
                                         <CommandGroup>
-                                            <ScrollArea className="h-40 rounded-md border p-1  dark:bg-zinc-900">
+                                            <ScrollArea className="h-40 rounded-md border p-1">
                                                 {mediaList?.map((media:Media) => (
                                                     <CommandItem
                                                         key={media.id}
                                                         onSelect={() => toggleMedia(media.id)}
                                                         className={clsx(
-                                                            'cursor-pointer px-2 py-2 rounded-md flex items-center gap-3',
+                                                            'cursor-pointer px-2 py-2 rounded-md flex items-center gap-3 mt-3',
                                                             selectedMediaIds.includes(media.id)
                                                                 ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-100'
                                                                 : ''
@@ -364,7 +364,7 @@ function SortableItem({ media }: { media: Media }) {
         ref={setNodeRef}
         style={style}
         {...attributes}
-        className="bg-background p-2 rounded-md border flex items-center gap-3"
+        className="p-2 rounded-md border flex items-center gap-3"
       >
         <div {...listeners} className="cursor-grab text-gray-400">
           <GripVertical size={18} />

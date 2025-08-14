@@ -28,7 +28,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
   return (
     <aside
       className={clsx(
-        "h-screen fixed top-0 left-0 z-10  bg-[#FAFAFA] dark:bg-[#191919] border border-t-0 border-b-0 border-gray-200 dark:border-gray-600 flex flex-col transition-all duration-500 ease-in-out",
+        "h-screen fixed top-0 left-0 z-10 custom-background border border-t-0 border-b-0 shadow-lg dark:shadow-gray-600 flex flex-col transition-all duration-500 ease-in-out",
         isOpen ? "w-74" : "w-20"
       )}
     >
@@ -58,8 +58,8 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
               <div
                 className={clsx(
                   "flex items-center p-4 rounded mt-4 cursor-pointer transition-colors duration-200",
-                  "hover:bg-gray-100 hover:text-black dark:hover:bg-gray-600 dark:hover:text-white",
-                  isActive && "bg-[#757575] text-white dark:bg-[#757575] dark:text-white"
+                  "dark:hover:bg-border  dark:hover:text-white",
+                  isActive && "text-white border dark:border-slate-500"
                 )}
               >
                 {/* Fixed-size icon container */}

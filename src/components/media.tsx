@@ -170,7 +170,7 @@ export default function MediaPage() {
             <h1 className="text-2xl font-semibold dark:text-white">Media Library</h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg p-4">
+                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg p-4 custom-scroll">
                     <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
                         Media
                     </h1>
@@ -179,7 +179,7 @@ export default function MediaPage() {
                             <input
                                 type="text"
                                 placeholder="Search media..."
-                                className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                className="block w-full rounded-md border border-gray-300 dark:border-gray-600 fields-background px-3 py-2 text-sm"
                                 onChange={handleSearch}
                                 value={searchQuery}
                             />
@@ -201,7 +201,7 @@ export default function MediaPage() {
                 </div>
 
                 {/* Right column */}
-                <div className="w-full max-h-[600px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg custom-scroll">
+                <div className="w-full max-h-[600px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg custom-scroll">
                     <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
                         <h1 className="text-xl font-semibold dark:text-white">Upload Media</h1>
                     </div>
@@ -220,7 +220,7 @@ export default function MediaPage() {
                                                     type="text"
                                                     placeholder="Enter media name"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -238,7 +238,7 @@ export default function MediaPage() {
                                                 <textarea
                                                     placeholder="Enter media description"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#2a2a2a] px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
