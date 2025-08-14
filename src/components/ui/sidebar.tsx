@@ -18,7 +18,6 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
     { name: "Playlists", href: "/playlists", icon: "/icons/playlist.png" },
     { name: "Screens", href: "/screens", icon: "/icons/screens.png" },
     { name: "Schedule", href: "/schedule", icon: "/icons/schedule.png" },
-    { name: "Users", href: "/users", icon: "/icons/users.png" }
   ];
 
   const handleLogout = () => {

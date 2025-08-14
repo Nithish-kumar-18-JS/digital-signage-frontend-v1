@@ -35,6 +35,7 @@ import { uploadMedia } from "@/api/media/media";
 import type { RootState, AppDispatch } from "@/lib/store/store";
 import { Button } from "./ui/button";
 import { GlobalDialog } from "./modals/globalDialog";
+import { formatDate } from "@/lib/utils";
 
 const MediaType = z.enum(["IMAGE", "VIDEO", "AUDIO", "HTML"]);
 
@@ -343,6 +344,8 @@ export function MediaTable({
                         <TableHead>Name</TableHead>
                         <TableHead>Type</TableHead>
                         <TableHead>Description</TableHead>
+                        <TableHead>Created At</TableHead>
+                        <TableHead>Updated At</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -367,6 +370,8 @@ export function MediaTable({
                                 <TableCell className="truncate max-w-xs">
                                     {item.description}
                                 </TableCell>
+                                <TableCell>{formatDate(item.createdAt)}</TableCell>
+                                <TableCell>{formatDate(item.updatedAt)}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end gap-2">
                                         <Button
@@ -385,12 +390,11 @@ export function MediaTable({
                                         />
                                     </div>
                                 </TableCell>
-
                             </TableRow>
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={5} className="text-center py-6 text-gray-500">
+                            <TableCell colSpan={8} className="text-center py-6 text-gray-500">
                                 No media available
                             </TableCell>
                         </TableRow>

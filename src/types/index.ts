@@ -102,8 +102,8 @@ export enum MediaType {
     durationOverride?: number;
     transitionEffect?: string;
   
-    playlist: Playlist;
-    media: Media;
+    playlist?: Playlist;
+    media?: Media;
   }
   
   export interface Setting {
@@ -113,7 +113,7 @@ export enum MediaType {
     value: string;
     updatedAt: Date;
   
-    screen: Screen;
+    screen?: Screen;
   }
   
   export interface Screen {
@@ -129,8 +129,9 @@ export enum MediaType {
     updatedAt: Date;
     createdBy: number;
   
-    settings: Setting[];
-    schedules: Schedule[];
+    settings?: Setting[];
+    playlists?: Playlist[];
+    schedules?: Schedule[];
   }
   
   export interface Schedule {
@@ -145,10 +146,11 @@ export enum MediaType {
     repeatDaily: boolean;
     priority: "high" | "medium" | "low";
     createdById: number;
-  
+    createdAt: Date;
+    updatedAt: Date;
     createdBy: User;
-    schedulePlaylists: SchedulePlaylist[];
-    screen: Screen;
+    schedulePlaylists?: SchedulePlaylist[];
+    screen?: Screen;
   }
   
   export interface SchedulePlaylist {
@@ -156,8 +158,8 @@ export enum MediaType {
     scheduleId: number;
     playlistId: number;
   
-    schedule: Schedule;
-    playlist: Playlist;
+    schedule?: Schedule;
+    playlist?: Playlist;
   }
   
 

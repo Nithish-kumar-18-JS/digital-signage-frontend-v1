@@ -25,3 +25,11 @@ export function clearAllCookies() {
       .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
   });
 }
+
+export function formatDate(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}

@@ -480,7 +480,7 @@ export function ScheduleTable({
                             <TableRow key={item.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.name}</TableCell>
-                                <TableCell>
+                                <TableCell className="truncate max-w-xs">
                                     {item.description || "—"}
                                 </TableCell>
                                 <TableCell>
