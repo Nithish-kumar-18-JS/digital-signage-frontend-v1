@@ -186,7 +186,7 @@ export default function PlaylistPage() {
             <h1 className="text-2xl font-semibold dark:text-white">Playlists Library</h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[500px] max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg p-4">
+                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg p-4">
                     <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
                         Playlists
                     </h1>
@@ -217,7 +217,7 @@ export default function PlaylistPage() {
                 </div>
 
                 {/* Right column */}
-                <div className="w-full max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
+                <div className="w-full max-h-[600px] custom-scroll overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg">
                     <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
                         <h1 className="text-xl font-semibold dark:text-white">Playlist Form</h1>
                     </div>
@@ -390,7 +390,7 @@ export function PlaylistTable({
     handleDelete: (id: number) => void;
 }) {
     return (
-        <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="rounded-md mt-6 border border-gray-200 dark:border-gray-700 overflow-hidden">
             <Table>
                 <TableHeader>
                     <TableRow>
