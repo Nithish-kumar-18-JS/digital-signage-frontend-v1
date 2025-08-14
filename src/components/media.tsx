@@ -170,7 +170,7 @@ export default function MediaPage() {
             <h1 className="text-2xl font-semibold dark:text-white">Media Library</h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[500px] max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg p-4">
+                <div className="w-full h-[600px] max-h-[600px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg p-4">
                     <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
                         Media
                     </h1>
@@ -201,7 +201,7 @@ export default function MediaPage() {
                 </div>
 
                 {/* Right column */}
-                <div className="w-full max-h-[500px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#3a3a3a] rounded-lg shadow-lg">
+                <div className="w-full max-h-[600px] overflow-y-auto bg-[#f5f5f5] dark:bg-[#191919] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg custom-scroll">
                     <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
                         <h1 className="text-xl font-semibold dark:text-white">Upload Media</h1>
                     </div>
@@ -335,25 +335,24 @@ export function MediaTable({
     handleDelete: (id: number) => void;
 }) {
     return (
-        <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="rounded-md border mt-5 border-gray-200 dark:border-[#191919] overflow-hidden">
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="w-[80px]">S.No</TableHead>
-                        <TableHead className="w-[80px]">Preview</TableHead>
+                        <TableHead className="w-[100px]">S.No</TableHead>
+                        <TableHead className="w-[100px]">Preview</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Type</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead>Created At</TableHead>
-                        <TableHead>Updated At</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead>Modified At</TableHead>
+                        <TableHead className="text-center">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {media.length > 0 ? (
                         media.map((item, index) => (
-                            <TableRow key={item.id}>
-                                <TableCell>{index + 1}</TableCell>
+                            // equal width for all columns
+                            <TableRow key={item.id} className="w-full">
+                                <TableCell className="w-[100px]">{index + 1}</TableCell>
                                 <TableCell>
                                     {item.url ? (
                                         <img
@@ -365,15 +364,11 @@ export function MediaTable({
                                         <div className="h-12 w-12 bg-gray-200 dark:bg-gray-600 rounded" />
                                     )}
                                 </TableCell>
-                                <TableCell className="font-medium">{item.name}</TableCell>
-                                <TableCell>{item.type}</TableCell>
-                                <TableCell className="truncate max-w-xs">
-                                    {item.description}
-                                </TableCell>
-                                <TableCell>{formatDate(item.createdAt)}</TableCell>
-                                <TableCell>{formatDate(item.updatedAt)}</TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
+                                <TableCell className="font-medium w-[100px]">{item.name}</TableCell>
+                                <TableCell className="w-[100px]">{item.type}</TableCell>
+                                <TableCell className="w-[100px]">{formatDate(item.updatedAt)}</TableCell>
+                                <TableCell className="text-center">
+                                    <div className="flex justify-center gap-2">
                                         <Button
                                             size="sm"
                                             variant="secondary"
@@ -394,7 +389,7 @@ export function MediaTable({
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={8} className="text-center py-6 text-gray-500">
+                            <TableCell colSpan={6} className="text-center py-6 text-gray-500">
                                 No media available
                             </TableCell>
                         </TableRow>

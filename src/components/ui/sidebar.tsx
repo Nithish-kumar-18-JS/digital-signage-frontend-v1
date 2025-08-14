@@ -28,7 +28,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
   return (
     <aside
       className={clsx(
-        "h-screen fixed top-0 left-0 z-10  bg-[#FAFAFA] dark:bg-[#222222] flex flex-col transition-all duration-500 ease-in-out",
+        "h-screen fixed top-0 left-0 z-10  bg-[#FAFAFA] dark:bg-[#191919] border border-t-0 border-b-0 border-gray-200 dark:border-gray-600 flex flex-col transition-all duration-500 ease-in-out",
         isOpen ? "w-74" : "w-20"
       )}
     >
