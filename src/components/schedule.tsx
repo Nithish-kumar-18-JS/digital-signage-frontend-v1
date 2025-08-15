@@ -51,7 +51,6 @@ const formValidationSchema = z.object({
     daysOfWeek: z.string().optional(),
     repeatDaily: z.boolean().optional(),
     priority: z.enum(["high", "medium", "low"]).optional(),
-    playlistId: z.number().optional(),
     screenId: z.number().optional(),
 });
 
@@ -68,7 +67,6 @@ export default function SchedulePage() {
             daysOfWeek: "",
             repeatDaily: false,
             priority: undefined,
-            playlistId: undefined,
             screenId: undefined,
         },
     });
@@ -103,17 +101,19 @@ export default function SchedulePage() {
             debouncedSearch.cancel();
         };
     }, [debouncedSearch]);
-
+    console.log("screens :",form.getValues())
     const onSubmit = async (data: FormValues) => {
         setBackendError(null);
         setLoading(true);
         try {
+            console.log("data :",data)
             const scheduleData: Partial<Schedule> = {
                 ...data,
                 id: data.id ?? undefined,
                 startTime: data.startTime ? new Date(data.startTime) : undefined,
                 endTime: data.endTime ? new Date(data.endTime) : undefined,
                 daysOfWeek: data.daysOfWeek || undefined,
+                screenId: data.screenId || undefined,
             };
 
             if (data.id) {
@@ -121,7 +121,7 @@ export default function SchedulePage() {
             } else {
                 await dispatch(addScheduleSlice(scheduleData as Schedule));
             }
-            form.reset();
+            // form.reset();
             dispatch(fetchScheduleSlice());
         } catch (error: any) {
             const errMsg =
@@ -133,7 +133,7 @@ export default function SchedulePage() {
     };
 
     const handleEdit = (schedule: Schedule) => {
-        const { id, startTime, endTime, daysOfWeek, priority, repeatDaily, ...rest } = schedule;
+        const { id, startTime, endTime, daysOfWeek, priority, repeatDaily, screenId, ...rest } = schedule;
         form.reset({
             id,
             startTime: startTime
@@ -145,6 +145,7 @@ export default function SchedulePage() {
             daysOfWeek: daysOfWeek || "",
             priority: priority || "high" as "high" | "medium" | "low",
             repeatDaily: repeatDaily || false,
+            screenId: screenId || undefined,
             ...rest,
         });
     };
@@ -195,7 +196,7 @@ export default function SchedulePage() {
                             </p>
                         </div>
                     ) : (
-                        <ScheduleTable
+                        <ScheduleCards
                             schedule={schedule}
                             handleEdit={handleEdit}
                             handleDelete={handleDelete}
@@ -447,7 +448,7 @@ export default function SchedulePage() {
     );
 }
 
-export function ScheduleTable({
+export function ScheduleCards({
     schedule,
     handleEdit,
     handleDelete,
@@ -456,91 +457,101 @@ export function ScheduleTable({
     handleEdit: (schedule: Schedule) => void;
     handleDelete: (id: number) => void;
 }) {
+    if (schedule.length === 0) {
+        return (
+            <div className="flex items-center justify-center h-full py-10">
+                <p className="text-gray-500 dark:text-gray-400">
+                    No schedule available
+                </p>
+            </div>
+        );
+    }
+
     return (
-        <div className="rounded-md mt-6 border border-gray-200 dark:border-gray-700 overflow-hidden ">
-            <Table className="custom-scroll overflow-y-auto">
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-[80px]">S.No</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead>Screen</TableHead>
-                        <TableHead>Priority</TableHead>
-                        <TableHead>Repeat Daily</TableHead>
-                        <TableHead>Start Time</TableHead>
-                        <TableHead>End Time</TableHead>
-                        <TableHead>Days of Week</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {schedule.length > 0 ? (
-                        schedule.map((item, index) => (
-                            <TableRow key={item.id} >
-                                <TableCell>{index + 1}</TableCell>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell className="truncate max-w-xs">
-                                    {item.description || "—"}
-                                </TableCell>
-                                <TableCell>
-                                    {item.screen?.name || "—"}
-                                </TableCell>
-                                <TableCell>{item.priority ?? "—"}</TableCell>
-                                <TableCell>
-                                    {item.repeatDaily ? "Yes" : "No"}
-                                </TableCell>
-                                <TableCell>
-                                    {item.startTime
-                                        ? new Date(
-                                              item.startTime
-                                          ).toLocaleString()
-                                        : "—"}
-                                </TableCell>
-                                <TableCell>
-                                    {item.endTime
-                                        ? new Date(
-                                              item.endTime
-                                          ).toLocaleString()
-                                        : "—"}
-                                </TableCell>
-                                <TableCell>
-                                    {item.daysOfWeek || "—"}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <div className="flex justify-end gap-2">
-                                        <Button
-                                            size="sm"
-                                            variant="secondary"
-                                            onClick={() => handleEdit(item)}
-                                        >
-                                            Edit
-                                        </Button>
-                                        <GlobalDialog
-                                            children="Delete"
-                                            title="Delete Schedule"
-                                            description="Are you sure you want to delete this schedule?"
-                                            action={() =>
-                                                item.id &&
-                                                handleDelete(item.id)
-                                            }
-                                            confirmText="Delete"
-                                        />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={10}
-                                className="text-center py-6 text-gray-500"
-                            >
-                                No schedule available
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            {schedule.map((item, index) => (
+                <div
+                    key={item.id}
+                    className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm bg-white dark:bg-[#1f1f1f] hover:shadow-md transition-shadow"
+                >
+                    {/* Header */}
+                    <div className="flex justify-between items-start mb-2">
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {item.name}
+                        </h2>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            item.priority === "high"
+                                ? "bg-red-100 text-red-600"
+                                : item.priority === "medium"
+                                ? "bg-yellow-100 text-yellow-600"
+                                : "bg-green-100 text-green-600"
+                        }`}>
+                            {item.priority ?? "—"}
+                        </span>
+                    </div>
+
+                    {/* Screen */}
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Screen:{" "}
+                        <span className="font-medium">
+                            {item.screen?.name || "—"}
+                        </span>
+                    </p>
+
+                    {/* Repeat Daily */}
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Repeat Daily:{" "}
+                        <span className="font-medium">
+                            {item.repeatDaily ? "Yes" : "No"}
+                        </span>
+                    </p>
+
+                    {/* Start / End Time */}
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Start:{" "}
+                        <span className="font-medium">
+                            {item.startTime
+                                ? new Date(item.startTime).toLocaleString()
+                                : "—"}
+                        </span>
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        End:{" "}
+                        <span className="font-medium">
+                            {item.endTime
+                                ? new Date(item.endTime).toLocaleString()
+                                : "—"}
+                        </span>
+                    </p>
+
+                    {/* Days of Week */}
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Days:{" "}
+                        <span className="font-medium">
+                            {item.daysOfWeek || "—"}
+                        </span>
+                    </p>
+
+                    {/* Actions */}
+                    <div className="flex justify-end gap-2 mt-4">
+                        <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => handleEdit(item)}
+                        >
+                            Edit
+                        </Button>
+                        <GlobalDialog
+                            children="Delete"
+                            title="Delete Schedule"
+                            description="Are you sure you want to delete this schedule?"
+                            action={() => item.id && handleDelete(item.id)}
+                            confirmText="Delete"
+                        />
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }
+

@@ -1,6 +1,6 @@
 'use client'
 
-import { SignupData } from "@/types/signup"
+import type { Signup } from "@/types/index"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,14 +16,14 @@ export default function Signup() {
     email: z.string().email("Invalid email").nonempty("Email is required"),
     password: z.string().nonempty("Password is required"),
   })
-  const { register, handleSubmit, formState: { errors } } = useForm<SignupData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<Signup>({
     resolver: zodResolver(formValidation),
   })  
 
   const { signup } = auth
     const [serverError, setServerError] = useState<string | null>(null)
     const router = useRouter()
-    const onSubmit = async (data: SignupData) => {
+    const onSubmit = async (data: Signup) => {
       setServerError(null)
       try {
         const response = await signup(data)
@@ -37,7 +37,7 @@ export default function Signup() {
     }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+    <div className="flex justify-center items-center min-h-screen custom-background">
       {/* Glassy Card */}
       <div className="flex flex-col items-center w-[400px] p-6 rounded-2xl border border-white/20 bg-[#FAFAFA]/10 backdrop-blur-lg shadow-2xl">
         <h1 className="text-3xl font-bold text-white w-full text-left border-b border-white/20 pb-4">

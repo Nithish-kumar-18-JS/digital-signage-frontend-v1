@@ -1,6 +1,6 @@
 import { setCookie } from "@/lib/utils";
 import apiClient from "../axois/axiosInterceptor";
-import { SignupData } from "@/types/signup";
+import { Signup } from "@/types/index";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -25,7 +25,7 @@ const login = async (data: LoginData) => {
     }
 }
 
-const signup = async (data:SignupData) => {
+const signup = async (data:Signup) => {
     try {
         const response = await apiClient.post(`${API_BASE_URL}/auth/signup`, data);
         if(response.data.token){

@@ -25,6 +25,14 @@ export enum MediaType {
   // INTERFACES
   // =====================
   
+  export interface Signup {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }
+ 
+  
   export interface User {
     id: number;
     email: string;
@@ -122,15 +130,16 @@ export enum MediaType {
     description?: string;
     deviceId: string;
     status: ScreenStatus;
-    lastSeen?: Date;
+    lastSeen?: Date | string;
     resolution?: string;
     orientation: ScreenOrientation;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | string;
+    updatedAt: Date | string;
     createdBy: number;
   
+    playlistId?: number;
+    playlist?: Playlist;
     settings?: Setting[];
-    playlists?: Playlist[];
     schedules?: Schedule[];
   }
   

@@ -39,7 +39,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+    <div className="flex justify-center items-center min-h-screen custom-background">
       {/* Glassy Card */}
       <div className="flex flex-col items-center w-[400px] p-6 rounded-2xl border border-white/20 bg-[#FAFAFA]/10 backdrop-blur-lg shadow-2xl">
         <h1 className="text-3xl font-bold text-white w-full text-left border-b border-white/20 pb-4">

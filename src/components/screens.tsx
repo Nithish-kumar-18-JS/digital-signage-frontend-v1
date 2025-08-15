@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Screen, ScreenStatus } from "@/types/index";
+import { Playlist, Screen, ScreenStatus  , ScreenOrientation } from "@/types/index";
 import { motion } from "framer-motion";
-import {
-    Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/components/ui/table";
 import debounce from "lodash/debounce";
 import {
     Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
@@ -27,7 +24,9 @@ import {
     deleteScreenSlice,
     addScreenSlice,
 } from "@/lib/store/screenSlice";
+import { fetchPlaylistSlice } from "@/lib/store/playlistSlice";
 import { Clock, Cpu, Edit, Maximize2, Monitor, Repeat, Trash2 } from "lucide-react";
+
 
 // Form validation schema for Screen
 const formValidationSchema = z.object({
@@ -38,6 +37,7 @@ const formValidationSchema = z.object({
     status: z.enum(["online", "offline", "inactive"]), // adjust as per your enum
     resolution: z.string().optional(),
     orientation: z.string().optional(),
+    playlistId: z.number().optional(),
 });
 
 type FormValues = z.infer<typeof formValidationSchema>;
@@ -49,6 +49,7 @@ export default function ScreenPage() {
             name: "",
             description: "",
             deviceId: "",
+            playlistId: undefined,
             status: "offline",
             resolution: "1920x1080",
             orientation: "landscape",
@@ -61,10 +62,12 @@ export default function ScreenPage() {
 
     const dispatch: AppDispatch = useDispatch();
     const screens = useSelector((state: RootState) => state.screen.items) as Screen[];
+    const playlist = useSelector((state: RootState) => state.playlist.items) as Playlist[];
 
     // Fetch on mount
     useEffect(() => {
         dispatch(fetchScreenSlice());
+        dispatch(fetchPlaylistSlice());
     }, [dispatch]);
 
     // Debounced search
@@ -108,9 +111,10 @@ export default function ScreenPage() {
             name: screen.name,
             description: screen.description || "",
             deviceId: screen.deviceId,
-            status: screen.status as unknown as "online" | "offline" | "inactive",
+            playlistId: screen.playlistId || undefined,
+            status: screen.status === ScreenStatus  .ONLINE ? "online" : screen.status === ScreenStatus.OFFLINE ? "offline" : "inactive",
             resolution: screen.resolution || "",
-            orientation: screen.orientation as unknown as "landscape" | "portrait",
+            orientation: screen.orientation === ScreenOrientation.LANDSCAPE ? "landscape" : "portrait",
         });
     };
 
@@ -220,6 +224,31 @@ export default function ScreenPage() {
 
                                 <FormField
                                     control={form.control}
+                                    name="playlistId"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Playlist</FormLabel>
+                                            <Select value={field.value?.toString()} onValueChange={(v) => field.onChange(Number(v))}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select playlist" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    {playlist.map((playlist: Playlist) => (
+                                                        <SelectItem key={playlist.id} value={playlist?.id?.toString() || ''}>
+                                                            {playlist.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
                                     name="status"
                                     render={({ field }) => (
                                         <FormItem>
@@ -283,7 +312,7 @@ export default function ScreenPage() {
 
                                 <button
                                     type="submit"
-                                    disabled={loading || !form.formState.isValid}
+                                    // disabled={loading || !form.formState.isValid}
                                     className="inline-flex justify-center rounded-md border border-transparent bg-[#2563eb] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2563eb]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
                                 >
                                     {loading ? "Saving..." : "Save"}

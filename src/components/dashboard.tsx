@@ -2,32 +2,67 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { getDashboardData } from '@/api/dashboard/dashboard';
+import CountUp from 'react-countup';
 
 export default function Dashboard() {
+    const [dashboardData, setDashboardData] = useState({
+        "screens": {
+            "total": 0,
+            "recentlyAdded": 0,
+            "active": 0,
+            "inactive": 0
+        },
+        "playlists": {
+            "total": 0,
+            "online": 0
+        },
+        "media": {
+            "total": 0,
+            "recentlyAdded": 0
+        }
+    });
+    const fechDashboardData = async () => {
+        try {
+            const response = await getDashboardData();
+            setDashboardData(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+   useEffect(() => {
+        fechDashboardData();
+    }, []);
+    
     const insights = [
         {
             name: "Total Screens",
-            value: "26",
+            value: dashboardData.screens.total,
             icon: "/icons/screens.png",
-            change: "+2 last month"
+            change: `${dashboardData.screens.recentlyAdded} Recently Added`,
+            valueChange: dashboardData.screens.recentlyAdded
         },
         {
             name: "Active Screens",
-            value: "12",
+            value: dashboardData.screens.active,
             icon: "/icons/checked.png",
-            change: "2 offline"
+            change: `${dashboardData.screens.inactive} Inactive`,
+            valueChange: dashboardData.screens.inactive
         },
         {
             name: "Total Playlists",
-            value: "12",
+            value: dashboardData.playlists.total,
             icon: "/icons/playlist.png",
-            change: "2 offline"
+            change: `${dashboardData.playlists.online} Online`,
+            valueChange: dashboardData.playlists.online
         },
         {
             name: "Total Media",
-            value: "12",
+            value: dashboardData.media.total,
             icon: "/icons/media.png",
-            change: "2.3 TB used"
+            change: `${dashboardData.media.recentlyAdded} Recently Added`,
+            valueChange: dashboardData.media.recentlyAdded
         }
     ];
 
@@ -54,7 +89,7 @@ export default function Dashboard() {
                         </div>
                         <div className="flex flex-col gap-1">
                             <h1 className="text-sm">{insight.name}</h1>
-                            <p className="text-3xl font-bold">{insight.value}</p>
+                            <p className="text-3xl font-bold"><CountUp end={Number(insight.value)} /></p>
                             <p className="text-sm dark:text-white">{insight.change}</p>
                         </div>
                     </div>
