@@ -63,6 +63,9 @@ export default function WebPlayer() {
         const parsedData: any = JSON.parse(data);
         setScreenData(parsedData);
         console.log(parsedData)
+        if(parsedData?.registrationCode !== registrationCode){
+          return;
+        }
         if(parsedData.screenUpdate){
           localStorage.setItem('screenData', JSON.stringify(parsedData));
           await caches.delete('screen-content-cache');
