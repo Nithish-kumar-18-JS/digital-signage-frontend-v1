@@ -63,7 +63,7 @@ export default function WebPlayer() {
         const parsedData: any = JSON.parse(data);
         setScreenData(parsedData);
         console.log(parsedData)
-        if(parsedData?.registrationCode !== registrationCode){
+        if(parsedData?.deviceId !== registrationCode){
           return;
         }
         if(parsedData.screenUpdate){
