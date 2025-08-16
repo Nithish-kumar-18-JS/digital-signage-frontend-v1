@@ -62,59 +62,58 @@ export default function WebPlayer() {
       try {
         const parsedData: any = JSON.parse(data);
         setScreenData(parsedData);
-        console.log(parsedData?.deviceId !== registrationCode,registrationCode,parsedData?.deviceId)
-        if(parsedData?.deviceId !== registrationCode){
-          return;
-        }
-        if(parsedData.screenUpdate){
-          localStorage.setItem('screenData', JSON.stringify(parsedData));
-          await caches.delete('screen-content-cache');
-          window.location.reload();
-        }
-        const screenContentData = parsedData?.playlist?.items?.map(
-          (item: any) => item.media?.url
-        );
-
-        if (screenContentData?.length) {
-          const cache = await caches.open('screen-content-cache');
-
-          for (const item of screenContentData) {
-            const fileName = item.split('/').pop() || item;
-            const cacheKey = `/cache/${fileName}`;
-
-            // ✅ Skip if already cached
-            const existing = await cache.match(new Request(cacheKey));
-            if (existing) {
-              console.log(`📂 Already cached: ${cacheKey}`);
-              const blob = await existing.blob();
-              const objectUrl = URL.createObjectURL(blob);
-              setCachedMedia((prev) => ({ ...prev, [item]: objectUrl }));
-              continue;
-            }
-
-            try {
-              const response = await fetch(item);
-              console.log(response)
-              // if (!response.ok) throw new Error(`Failed to fetch ${item}`);
-
-              const blob = await response.blob();
-              await cache.put(new Request(cacheKey), new Response(blob));
-
-              const objectUrl = URL.createObjectURL(blob);
-              setCachedMedia((prev) => ({ ...prev, [item]: objectUrl }));
-
-              console.log(`✅ Cached new blob: ${cacheKey}`);
-            } catch (err) {
-              console.error(`❌ Error caching ${item}:`, err);
-            }
+        console.log(parsedData?.deviceId === registrationCode,registrationCode,parsedData?.deviceId)
+        if(parsedData?.deviceId === registrationCode){
+          if(parsedData.screenUpdate){
+            localStorage.setItem('screenData', JSON.stringify(parsedData));
+            await caches.delete('screen-content-cache');
+            window.location.reload();
           }
-
-          // Debug: list all keys in cache
-          const keys = await cache.keys();
-          console.log(
-            '🔑 Cache keys now:',
-            keys.map((k) => k.url)
+          const screenContentData = parsedData?.playlist?.items?.map(
+            (item: any) => item.media?.url
           );
+  
+          if (screenContentData?.length) {
+            const cache = await caches.open('screen-content-cache');
+  
+            for (const item of screenContentData) {
+              const fileName = item.split('/').pop() || item;
+              const cacheKey = `/cache/${fileName}`;
+  
+              // ✅ Skip if already cached
+              const existing = await cache.match(new Request(cacheKey));
+              if (existing) {
+                console.log(`📂 Already cached: ${cacheKey}`);
+                const blob = await existing.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                setCachedMedia((prev) => ({ ...prev, [item]: objectUrl }));
+                continue;
+              }
+  
+              try {
+                const response = await fetch(item);
+                console.log(response)
+                // if (!response.ok) throw new Error(`Failed to fetch ${item}`);
+  
+                const blob = await response.blob();
+                await cache.put(new Request(cacheKey), new Response(blob));
+  
+                const objectUrl = URL.createObjectURL(blob);
+                setCachedMedia((prev) => ({ ...prev, [item]: objectUrl }));
+  
+                console.log(`✅ Cached new blob: ${cacheKey}`);
+              } catch (err) {
+                console.error(`❌ Error caching ${item}:`, err);
+              }
+            }
+  
+            // Debug: list all keys in cache
+            const keys = await cache.keys();
+            console.log(
+              '🔑 Cache keys now:',
+              keys.map((k) => k.url)
+            );
+          }
         }
       } catch (error) {
         console.error('❌ Error handling screenUpdated:', error);
