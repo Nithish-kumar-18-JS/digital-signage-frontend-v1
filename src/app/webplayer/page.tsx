@@ -3,12 +3,14 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { io } from 'socket.io-client';
-import { getCookies, setCookie } from '@/lib/utils';
+import { cn, getCookies, setCookie } from '@/lib/utils';
+import { Screen } from '@/types';
 
 export default function WebPlayer() {
   const [registrationCode, setRegistrationCode] = useState('');
-  const [screenData, setScreenData] = useState(null);
-
+  const [screenData, setScreenData] = useState<Screen | null>(null);
+  const [cachedMedia, setCachedMedia] = useState<Record<string, string>>({}); // { originalUrl: blobObjectUrl }
+  const [index, setIndex] = useState(0);
   const generateRegistrationCode = () => {
     const part1 = Math.floor(Math.random() * 9) + 1;
     const fourDigits = () =>
@@ -26,6 +28,21 @@ export default function WebPlayer() {
     setRegistrationCode(code);
   }, []);
 
+  // Restore cached screenData & blobs on startup
+  useEffect(() => {
+    const cached = localStorage.getItem('screenData');
+    if (cached) {
+      try {
+        const parsed: Screen = JSON.parse(cached);
+        setScreenData(parsed);
+        console.log('📦 Loaded screenData from localStorage');
+        restoreCachedMedia(parsed);
+      } catch (err) {
+        console.error('❌ Failed to parse cached screenData:', err);
+      }
+    }
+  }, []);
+
   // WebSocket connection AFTER code is set
   useEffect(() => {
     if (!registrationCode) return;
@@ -36,26 +53,69 @@ export default function WebPlayer() {
 
     socket.on('connect', () => {
       console.log('✅ Connected to WebSocket');
-      // Send registration code to server
       socket.emit('message', { text: registrationCode }, (response: any) => {
         console.log('Server response:', response);
       });
     });
 
-    socket.on('screenUpdated', (data: any) => {
-      setScreenData(JSON.parse(data));
-    });
+    socket.on('screenUpdated', async (data: any) => {
+      try {
+        const parsedData: any = JSON.parse(data);
+        setScreenData(parsedData);
+        console.log(parsedData)
+        if(parsedData.screenUpdate){
+          localStorage.setItem('screenData', JSON.stringify(parsedData));
+          await caches.delete('screen-content-cache');
+          window.location.reload();
+        }
+        const screenContentData = parsedData?.playlist?.items?.map(
+          (item: any) => item.media?.url
+        );
 
-    socket.on('message', (data: any) => {
-      console.log('Server response:', data);
-    });
+        if (screenContentData?.length) {
+          const cache = await caches.open('screen-content-cache');
 
-    socket.on('disconnect', () => {
-      console.log('❌ Disconnected from WebSocket');
-    });
+          for (const item of screenContentData) {
+            const fileName = item.split('/').pop() || item;
+            const cacheKey = `/cache/${fileName}`;
 
-    socket.on('connect_error', (err) => {
-      console.error('❌ Connection error:', err.message);
+            // ✅ Skip if already cached
+            const existing = await cache.match(new Request(cacheKey));
+            if (existing) {
+              console.log(`📂 Already cached: ${cacheKey}`);
+              const blob = await existing.blob();
+              const objectUrl = URL.createObjectURL(blob);
+              setCachedMedia((prev) => ({ ...prev, [item]: objectUrl }));
+              continue;
+            }
+
+            try {
+              const response = await fetch(item);
+              console.log(response)
+              // if (!response.ok) throw new Error(`Failed to fetch ${item}`);
+
+              const blob = await response.blob();
+              await cache.put(new Request(cacheKey), new Response(blob));
+
+              const objectUrl = URL.createObjectURL(blob);
+              setCachedMedia((prev) => ({ ...prev, [item]: objectUrl }));
+
+              console.log(`✅ Cached new blob: ${cacheKey}`);
+            } catch (err) {
+              console.error(`❌ Error caching ${item}:`, err);
+            }
+          }
+
+          // Debug: list all keys in cache
+          const keys = await cache.keys();
+          console.log(
+            '🔑 Cache keys now:',
+            keys.map((k) => k.url)
+          );
+        }
+      } catch (error) {
+        console.error('❌ Error handling screenUpdated:', error);
+      }
     });
 
     return () => {
@@ -63,9 +123,72 @@ export default function WebPlayer() {
     };
   }, [registrationCode]);
 
+  // Helper: Restore blobs from cache on reload
+  const restoreCachedMedia = async (parsed: Screen) => {
+    try {
+      const cache = await caches.open('screen-content-cache');
+      const screenContentData = parsed?.playlist?.items?.map(
+        (item: any) => item.media?.url
+      );
+
+      if (screenContentData?.length) {
+        for (const item of screenContentData) {
+          const fileName = item.split('/').pop() || item;
+          const cacheKey = `/cache/${fileName}`;
+          const match = await cache.match(new Request(cacheKey));
+
+          if (match) {
+            const blob = await match.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            setCachedMedia((prev) => ({ ...prev, [item]: objectUrl }));
+            console.log(`📂 Restored ${cacheKey} from cache`);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('❌ Failed to restore cached media:', err);
+    }
+  };
+
+  const renderPlaylist = (screenData: Screen) => {
+    let currentIndex = index 
+    let current = screenData?.playlist?.items?.[currentIndex]
+    
+    setInterval(() => {
+      currentIndex++
+      console.log(currentIndex)
+      if(currentIndex === screenData?.playlist?.items?.length) {
+        setIndex(0)
+        currentIndex = 0
+      }else{
+        setIndex(currentIndex)
+        current = screenData?.playlist?.items?.[currentIndex]
+      }
+    }, 5000)
+    
+    return (
+      <div className="w-full h-full">
+        <img
+          src={current?.media?.url || ''}
+          alt={current?.media?.name || ''}
+          className="object-cover w-full h-full"
+        />
+      </div>
+    )
+    
+  }
+
+  useEffect(() => {
+    console.log(index)
+  }, [index])
+
   return (
-    <div className="h-screen w-screen grid grid-cols-1 md:grid-cols-2">
+    <div className={cn("h-screen w-screen grid grid-cols-1", !screenData?.playlist?.items?.length && "grid-cols-2")}>
       {/* Left Section */}
+      {
+        screenData?.playlist?.items?.length && renderPlaylist(screenData)
+      }
+      {!screenData?.playlist?.items?.length && (
       <div className="bg-black text-white p-8 flex flex-col justify-center space-y-8">
         <div>
           <h1 className="text-3xl font-bold uppercase">Registration Code</h1>
@@ -118,8 +241,8 @@ export default function WebPlayer() {
           </div>
         </div>
       </div>
-
-      {/* Right Section */}
+      )}
+      {!screenData?.playlist?.items?.length && (
       <div className="relative">
         <Image
           src="/player_bg.png"
@@ -127,7 +250,13 @@ export default function WebPlayer() {
           fill
           className="object-cover"
         />
+
+        {/* Render cached media */}
+          <div className="absolute inset-0 flex items-center justify-center text-white bg-black/70">
+            Waiting for screen data...
+          </div>
       </div>
+      )}
     </div>
   );
 }
