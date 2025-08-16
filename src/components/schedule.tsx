@@ -174,11 +174,11 @@ export default function SchedulePage() {
             </h1>
             <div className="grid [grid-template-columns:2fr_1fr] gap-6 mt-6">
                 {/* Left column */}
-                <div className="w-full h-[500px] max-h-[500px] overflow-y-auto custom-background border-gray-200 border dark:border-gray-600  rounded-lg shadow-lg p-4 custom-scroll">
-                    <h1 className="text-xl font-semibold dark:text-white pb-2">
+                <div className="w-full h-[500px] max-h-[500px] overflow-y-auto custom-background   rounded-lg shadow-lg p-4 custom-scroll">
+                    <h1 className="text-xl font-semibold dark:text-white pb-2 border-b">
                         Schedule list
                     </h1>
-                    <div className="flex flex-col gap-4">
+                    <div className="mt-6 flex flex-col gap-4">
                         <div className="flex items-center gap-2">
                             <input
                                 type="text"
@@ -206,7 +206,7 @@ export default function SchedulePage() {
 
                 {/* Right column */}
                 <div className="w-full max-h-[500px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg custom-scroll">
-                    <div className="p-4 border-b border-[#191919] dark:border-gray-600">
+                    <div className="p-4 border-b">
                         <h1 className="text-xl font-semibold dark:text-white">
                             Create a Schedule Job
                         </h1>
@@ -435,7 +435,7 @@ export default function SchedulePage() {
                                     disabled={
                                         loading || !form.formState.isValid
                                     }
-                                    className="inline-flex justify-center rounded-md border border-transparent bg-[#2563eb] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2563eb]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
+                                    className="inline-flex justify-center rounded-md border border-transparent bg-[#1d1d1d] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#1d1d1d]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
                                 >
                                     {loading ? "Saving..." : "Save"}
                                 </button>

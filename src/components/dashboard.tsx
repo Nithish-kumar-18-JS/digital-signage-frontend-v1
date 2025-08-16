@@ -82,10 +82,10 @@ export default function Dashboard() {
                      }}
                    >
                     <div
-                        className="rounded-lg border dark:border-slate-500 shadow-lg p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+                        className="rounded-lg border custom-border shadow-lg p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
                     >
                         <div className="w-[80px] h-[80px] flex items-center justify-center rounded-full">
-                            <Image src={insight.icon} alt={insight.name} width={40} height={40} />
+                            <Image className='icons-bg' src={insight.icon} alt={insight.name} width={40} height={40} />
                         </div>
                         <div className="flex flex-col gap-1">
                             <h1 className="text-sm">{insight.name}</h1>
@@ -109,10 +109,10 @@ export default function Dashboard() {
                   ease: "easeOut",
                 }}
                 >
-                <div className="w-full h-[450px] border dark:border-slate-500 rounded-lg shadow-lg custom-scroll transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+                <div className="w-full h-[450px] border custom-border rounded-lg shadow-lg custom-scroll transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
                     {/* Recent Activity content */}
                     <div className="p-4">
-                        <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">Recent Activity</h1>
+                        <h1 className="text-xl font-semibold dark:text-white border-b pb-2">Recent Activity</h1>
                         {/* empty state */}
                     </div>
                     <div className="flex items-center justify-center h-full">
@@ -130,10 +130,10 @@ export default function Dashboard() {
                   ease: "easeOut",
                 }}
                 >
-                <div className="w-full h-[450px] border dark:border-slate-500 rounded-lg shadow-lg custom-scroll transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+                <div className="w-full h-[450px] border custom-border rounded-lg shadow-lg custom-scroll transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
                     {/* System Health content */}
                     <div className="p-4">
-                        <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">System Health</h1>
+                        <h1 className="text-xl font-semibold dark:text-white border-b pb-2">System Health</h1>
                         {/* empty state */}
                     </div>
                     <div className="flex items-center justify-center h-full">

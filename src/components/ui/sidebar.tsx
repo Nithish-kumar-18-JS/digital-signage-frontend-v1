@@ -28,7 +28,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
   return (
     <aside
       className={clsx(
-        "h-screen fixed top-0 left-0 z-10 custom-background border border-t-0 border-b-0 shadow-lg dark:shadow-gray-600 flex flex-col transition-all duration-500 ease-in-out",
+        "h-screen fixed top-0 left-0 z-10 custom-background border border-t-0 border-b-0 shadow-lg flex flex-col transition-all duration-500 ease-in-out",
         isOpen ? "w-74" : "w-20"
       )}
     >
@@ -59,12 +59,12 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
                 className={clsx(
                   "flex items-center p-4 rounded mt-4 cursor-pointer transition-colors duration-200",
                   "dark:hover:bg-border  dark:hover:text-white",
-                  isActive && "text-white border dark:border-slate-500"
+                  isActive && "text-white border custom-border"
                 )}
               >
                 {/* Fixed-size icon container */}
                 <div className="w-6 h-6 flex items-center justify-center flex-shrink-0">
-                  <Image src={icon} alt={name} width={24} height={24} />
+                  <Image className='icons-bg' src={icon} alt={name} width={24} height={24} />
                 </div>
                 <span
                   className={clsx(
@@ -89,7 +89,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
         )}
       >
         <div onClick={handleLogout} className="flex items-center p-4 hover:bg-gray-100 rounded w-full cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white">
-          <Image src="/icons/logout.png" alt="Logout" width={24} height={24} className="mr-2" />
+          <Image className='icons-bg mr-2' src="/icons/logout.png" alt="Logout" width={24} height={24} />
           <span
             className={clsx(
               "dark:text-white whitespace-nowrap font-bold transition-opacity duration-300 overflow-hidden",

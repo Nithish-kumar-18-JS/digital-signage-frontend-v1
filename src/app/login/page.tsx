@@ -41,8 +41,8 @@ export default function Login() {
   return (
     <div className="flex justify-center items-center min-h-screen custom-background">
       {/* Glassy Card */}
-      <div className="flex flex-col items-center w-[400px] p-6 rounded-2xl border border-white/20 bg-[#FAFAFA]/10 backdrop-blur-lg shadow-2xl">
-        <h1 className="text-3xl font-bold text-white w-full text-left border-b border-white/20 pb-4">
+      <div className="flex flex-col items-center w-[400px] p-6 rounded-2xl border custom-border bg-[#FAFAFA]/10 backdrop-blur-lg shadow-2xl">
+        <h1 className="text-3xl font-bold text-white w-full text-left border-b custom-border pb-4">
           Sign in to Dashboard
         </h1>
 
@@ -66,7 +66,7 @@ export default function Login() {
               {...register("email")}
               aria-invalid={errors.email ? "true" : "false"}
               aria-describedby="email-error"
-              className={`w-full border border-white/20 bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition ${
+              className={`w-full border custom-border bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white-400 focus:border-transparent transition ${
                 errors.email ? "border-red-500 focus:ring-red-400" : ""
               }`}
             />
@@ -96,7 +96,7 @@ export default function Login() {
               {...register("password")}
               aria-invalid={errors.password ? "true" : "false"}
               aria-describedby="password-error"
-              className={`w-full border border-white/20 bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition ${
+              className={`w-full border custom-border bg-[#FAFAFA]/10 text-white placeholder-white/60 text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white-400 focus:border-transparent transition ${
                 errors.password ? "border-red-500 focus:ring-red-400" : ""
               }`}
             />
@@ -116,7 +116,7 @@ export default function Login() {
             <input
               id="remember"
               type="checkbox"
-              className="w-4 h-4 accent-teal-400"
+              className="w-4 h-4 accent-[#1d1d1d]/80"
             />
             <label
               htmlFor="remember"
@@ -135,17 +135,17 @@ export default function Login() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-teal-500/80 text-white px-4 py-2 rounded-lg mt-2 w-full font-semibold hover:bg-teal-500 focus:ring-2 focus:ring-teal-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#1d1d1d]/80 text-white px-4 py-2 rounded-lg mt-2 w-full font-semibold hover:bg-[#1d1d1d]/80 focus:ring-2 focus:ring-white-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Signing in..." : "Sign in"}
           </button>
 
           {/* Forgot password */}
-          <p className="text-xs text-teal-300/80 mt-1 hover:underline cursor-pointer text-center">
+          <p className="text-xs text-[#1d1d1d]/80 mt-1 hover:underline cursor-pointer text-center">
             Forgot password?
           </p>
           {/* Don't have an account */}
-          <p onClick={() => router.push("/signup")} className="text-xs text-teal-300/80 mt-1 hover:underline cursor-pointer text-center">
+          <p onClick={() => router.push("/signup")} className="text-xs text-[#1d1d1d]/80 mt-1 hover:underline cursor-pointer text-center">
             Don't have an account?
           </p>
           

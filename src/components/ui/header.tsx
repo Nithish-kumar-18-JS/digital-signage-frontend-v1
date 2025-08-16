@@ -28,7 +28,7 @@ export default function Header({ open }: HeaderProps) {
           alt="Notification"
           width={30}
           height={30}
-          className="border border-[#dcdcdc] rounded-full p-1 cursor-pointer dark:border-gray-600"
+          className="icons-bg border border-[#dcdcdc] rounded-full p-1 cursor-pointer dark:border-gray-600"
         />
         {/* <ModeToggle /> */}
       </div>

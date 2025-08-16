@@ -197,10 +197,10 @@ export default function PlaylistPage() {
                 }}
                 >
                 <div className="w-full h-[600px] max-h-[600px] overflow-y-auto custom-background border custom-border rounded-lg shadow-lg p-4 custom-scroll transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
-                    <h1 className="text-xl font-semibold dark:text-white border-b border-[#dcdcdc] dark:border-gray-600 pb-2">
+                    <h1 className="text-xl font-semibold dark:text-white border-b pb-2">
                         Playlists
                     </h1>
-                    <div className="flex flex-col gap-4">
+                    <div className="mt-6 flex flex-col gap-4">
                         <div className="flex items-center gap-2">
                             <input
                                 type="text"
@@ -237,7 +237,7 @@ export default function PlaylistPage() {
                 }}
                 >
                 <div className="w-full h-[600px] max-h-[600px] custom-scroll overflow-y-auto custom-background border custom-border rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
-                    <div className="p-4 border-b border-[#dcdcdc] dark:border-gray-600">
+                    <div className="p-4 border-b ">
                         <h1 className="text-xl font-semibold dark:text-white">Playlist Form</h1>
                     </div>
 
@@ -255,7 +255,7 @@ export default function PlaylistPage() {
                                                     type="text"
                                                     placeholder="Enter playlist name"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 fields-background px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border custom-border fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -273,7 +273,7 @@ export default function PlaylistPage() {
                                                 <textarea
                                                     placeholder="Enter playlist description"
                                                     {...field}
-                                                    className="block w-full rounded-md border border-gray-300 dark:border-gray-600 fields-background px-3 py-2 text-sm"
+                                                    className="block w-full rounded-md border custom-border fields-background px-3 py-2 text-sm"
                                                 />
                                             </FormControl>
                                             <FormMessage />
@@ -284,7 +284,7 @@ export default function PlaylistPage() {
                                 <div className="grid gap-2">
                                     <Label>Select Media *</Label>
                                     <Command>
-                                        <CommandInput placeholder="Search media..." />
+                                        <CommandInput placeholder="Search media..." className="text-white" />
                                         <CommandEmpty>No media found.</CommandEmpty>
                                         <CommandGroup>
                                             <ScrollArea className="h-40 rounded-md border p-1">
@@ -355,7 +355,7 @@ export default function PlaylistPage() {
                                 <button
                                     type="submit"
                                     disabled={loading || !form.formState.isValid}
-                                    className="inline-flex justify-center rounded-md border border-transparent bg-[#2563eb] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2563eb]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
+                                    className="inline-flex justify-center rounded-md border border-transparent bg-[#1d1d1d] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#1d1d1d]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
                                 >
                                     {loading ? "Adding..." : "Add"}
                                 </button>

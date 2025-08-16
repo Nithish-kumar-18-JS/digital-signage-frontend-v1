@@ -146,7 +146,7 @@ export default function ScreenPage() {
                     <h1 className="text-xl font-semibold dark:text-white border-b pb-2">
                         Screen List
                     </h1>
-                    <div className="flex items-center gap-2 mt-4">
+                    <div className="mt-6 flex items-center gap-2 mt-4">
                         <input
                             type="text"
                             placeholder="Search screens..."
@@ -313,7 +313,7 @@ export default function ScreenPage() {
                                 <button
                                     type="submit"
                                     // disabled={loading || !form.formState.isValid}
-                                    className="inline-flex justify-center rounded-md border border-transparent bg-[#2563eb] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#2563eb]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
+                                    className="inline-flex justify-center rounded-md border border-transparent bg-[#1d1d1d] px-6 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#1d1d1d]/80 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/80"
                                 >
                                     {loading ? "Saving..." : "Save"}
                                 </button>
@@ -358,7 +358,7 @@ export function ScreenGrid({
               delay: index * 0.1, // staggered effect
               ease: "easeOut",
             }}
-            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/40 to-white/10 dark:from-gray-800/40 dark:to-gray-900/10 backdrop-blur-lg shadow-lg border border-white/20 dark:border-gray-700 p-5 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+            className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/40 to-white/10 dark:from-gray-800/40 dark:to-gray-900/10 backdrop-blur-lg shadow-lg border custom-border dark:border-gray-700 p-5 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
@@ -401,7 +401,7 @@ export function ScreenGrid({
             </div>
   
             {/* Actions */}
-            <div className="flex justify-end gap-2 mt-5 pt-3 border-t border-white/20 dark:border-gray-700">
+            <div className="flex justify-end gap-2 mt-5 pt-3 border-t custom-border dark:border-gray-700">
               <Button
                 size="sm"
                 variant="secondary"
