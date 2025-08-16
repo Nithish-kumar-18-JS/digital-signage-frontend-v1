@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { io } from 'socket.io-client';
 import { cn, getCookies, setCookie } from '@/lib/utils';
 import { Screen } from '@/types';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function WebPlayer() {
   const [registrationCode, setRegistrationCode] = useState('');
@@ -165,91 +166,101 @@ export default function WebPlayer() {
   const current =
     screenData?.playlist?.items?.[index] ?? null;
 
-  return (
-    <div
-      className={cn(
-        'h-screen w-screen grid grid-cols-1',
-        !screenData?.playlist?.items?.length && 'grid-cols-2'
-      )}
-    >
-      {/* Playlist rendering */}
-      {screenData?.playlist?.items?.length && current && (
-        <div className="w-full h-full">
-          <img
-            src={cachedMedia[current?.media?.url || ''] || current?.media?.url || ''}
-            alt={current?.media?.name || ''}
-            className="object-cover w-full h-full"
-          />
-        </div>
-      )}
-
-      {/* Registration UI */}
-      {!screenData?.playlist?.items?.length && (
-        <div className="bg-black text-white p-8 flex flex-col justify-center space-y-8">
-          <div>
-            <h1 className="text-3xl font-bold uppercase">Registration Code</h1>
-            <p className="text-teal-500 text-6xl font-bold mt-2">
-              {registrationCode}
-            </p>
-            <p className="mt-2 text-lg">
-              Register this screen at:{' '}
-              <span className="text-teal-400">app.yourdomain.com</span>
-            </p>
+    return (
+      <div
+        className={cn(
+          'h-screen w-screen grid grid-cols-1',
+          !screenData?.playlist?.items?.length && 'md:grid-cols-2'
+        )}
+      >
+        {/* Playlist rendering */}
+        {screenData?.playlist?.items?.length && current && (
+          <div className="w-full h-full relative bg-black">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={index}
+                src={cachedMedia[current?.media?.url || ''] || current?.media?.url || ''}
+                alt={current?.media?.name || ''}
+                className="absolute inset-0 w-full h-full object-contain md:object-cover"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.2 }}
+              />
+            </AnimatePresence>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        )}
+    
+        {/* Registration UI */}
+        {!screenData?.playlist?.items?.length && (
+          <div className="bg-black text-white p-6 sm:p-8 flex flex-col justify-center space-y-6 md:space-y-8 overflow-y-auto">
             <div>
-              <h2 className="uppercase font-semibold text-gray-400 mb-3">
-                Registration Steps:
-              </h2>
-              {[
-                'Login to your account.',
-                'Go to “Screens” and add a new screen or edit an existing one.',
-                'Find the Registration Code field and type in the 9-digit code.',
-                'Click “Save” and wait for a few seconds.',
-              ].map((step, idx) => (
-                <div key={idx} className="mb-3">
-                  <p className="text-teal-500 font-bold">Step {idx + 1}</p>
-                  <p className="text-white">{step}</p>
-                </div>
-              ))}
-            </div>
-
-            <div>
-              <h2 className="uppercase font-semibold text-gray-400 mb-3">
-                Tech Support Info:
-              </h2>
-              <p>
-                <span className="font-bold">Screen ID:</span> 0dbbbf6723441699
+              <h1 className="text-2xl sm:text-3xl font-bold uppercase">Registration Code</h1>
+              <p className="text-teal-500 text-4xl sm:text-6xl font-bold mt-2 break-words">
+                {registrationCode}
               </p>
-              <p>
-                <span className="font-bold">Serial #1:</span>{' '}
-                <span className="text-teal-400">0dbbbf6723441699</span>
-              </p>
-              <p>
-                <span className="font-bold">Serial #2:</span>{' '}
-                <span className="text-teal-400">
-                  1878dcf8b8d5ef3925904eb0cd97abda
-                </span>
+              <p className="mt-2 text-base sm:text-lg">
+                Register this screen at:{' '}
+                <span className="text-teal-400 break-all">app.yourdomain.com</span>
               </p>
             </div>
+    
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              {/* Registration Steps */}
+              <div>
+                <h2 className="uppercase font-semibold text-gray-400 mb-3 text-sm sm:text-base">
+                  Registration Steps:
+                </h2>
+                {[
+                  'Login to your account.',
+                  'Go to “Screens” and add a new screen or edit an existing one.',
+                  'Find the Registration Code field and type in the 9-digit code.',
+                  'Click “Save” and wait for a few seconds.',
+                ].map((step, idx) => (
+                  <div key={idx} className="mb-3">
+                    <p className="text-teal-500 font-bold">Step {idx + 1}</p>
+                    <p className="text-white text-sm sm:text-base">{step}</p>
+                  </div>
+                ))}
+              </div>
+    
+              {/* Tech Support Info */}
+              <div>
+                <h2 className="uppercase font-semibold text-gray-400 mb-3 text-sm sm:text-base">
+                  Tech Support Info:
+                </h2>
+                <p className="text-sm sm:text-base">
+                  <span className="font-bold">Screen ID:</span> 0dbbbf6723441699
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-bold">Serial #1:</span>{' '}
+                  <span className="text-teal-400">0dbbbf6723441699</span>
+                </p>
+                <p className="text-sm sm:text-base">
+                  <span className="font-bold">Serial #2:</span>{' '}
+                  <span className="text-teal-400">
+                    1878dcf8b8d5ef3925904eb0cd97abda
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
-
-      {!screenData?.playlist?.items?.length && (
-        <div className="relative">
-          <Image
-            src="/player_bg.png"
-            alt="Background"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 flex items-center justify-center text-white bg-black/70">
-            Waiting for screen data...
+        )}
+    
+        {/* Background image when waiting */}
+        {!screenData?.playlist?.items?.length && (
+          <div className="relative hidden md:block">
+            <Image
+              src="/player_bg.png"
+              alt="Background"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 flex items-center justify-center text-white bg-black/70">
+              Waiting for screen data...
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
+        )}
+      </div>
+    );    
 }
