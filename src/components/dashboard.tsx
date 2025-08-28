@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { getDashboardData } from '@/api/dashboard/dashboard';
 import CountUp from 'react-countup';
+import { formatDate } from '@/lib/utils';
 
 export default function Dashboard() {
     const [dashboardData, setDashboardData] = useState({
@@ -21,7 +22,8 @@ export default function Dashboard() {
         "media": {
             "total": 0,
             "recentlyAdded": 0
-        }
+        },
+        "activityLogs": []
     });
     const fechDashboardData = async () => {
         try {
@@ -65,6 +67,46 @@ export default function Dashboard() {
             valueChange: dashboardData.media.recentlyAdded
         }
     ];
+
+    let systemHealth = [
+        {
+            name: "Services",
+            value: "Running",
+            icon: "/icons/services.png",
+            change: "Online",
+            valueChange: 100
+        },
+        {
+            name: "Storage",
+            value: "Running",
+            icon: "/icons/storage.png",
+            change: "Online",
+            valueChange: 100
+        },
+        {
+            name: "Web Player",
+            value: "Running",
+            icon: "/icons/television.png",
+            change: "Online",
+            valueChange: 100
+        }
+    ]
+
+    const findIcon = (response: string) => {
+        if (response.includes("Media")) {
+            return "/icons/media.png";
+        } else if (response.includes("Playlist")) {
+            return "/icons/playlist.png";
+        } else if (response.includes("Screen")) {
+            return "/icons/screens.png";
+        } 
+        else if (response.includes("Schedule")) {
+            return "/icons/schedule.png";
+        } 
+        else {
+            return "/icons/unknown.png";
+        }
+    }
 
     return (
         <div className='w-full'>
@@ -115,9 +157,36 @@ export default function Dashboard() {
                         <h1 className="text-xl font-semibold dark:text-white border-b pb-2">Recent Activity</h1>
                         {/* empty state */}
                     </div>
-                    <div className="flex items-center justify-center h-full">
+                    {
+                        dashboardData.activityLogs.length > 0 && 
+                        dashboardData.activityLogs.map((activityLog:any, index) => (
+                            <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                              duration: 0.4,
+                              delay: index * 0.1, // staggered effect
+                              ease: "easeOut",
+                            }}
+                          >
+                            <div
+                                className="rounded-lg custom-border shadow-lg p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+                            >
+                                <div className="w-[80px] h-[80px] flex items-center justify-center rounded-full">
+                                    <Image className='icons-bg' src={findIcon(activityLog.response)} alt={activityLog.response} width={40} height={40} />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <h1 className="text-sm">{activityLog.response}</h1>
+                                    <p className="text-sm dark:text-white">{formatDate(activityLog.createdAt)}</p>
+                                </div>
+                            </div>
+                            </motion.div>
+                        ))  
+                    }
+                    {dashboardData.activityLogs.length === 0 &&  <div className="flex items-center justify-center h-full">
                         <p className="text-gray-500 dark:text-gray-400">No recent activity</p>
-                    </div>
+                    </div>}
                 </div>
                 </motion.div>
                 {/* Right column */}
@@ -136,9 +205,40 @@ export default function Dashboard() {
                         <h1 className="text-xl font-semibold dark:text-white border-b pb-2">System Health</h1>
                         {/* empty state */}
                     </div>
-                    <div className="flex items-center justify-center h-full">
-                        <p className="text-gray-100 dark:text-gray-400">No system health data available</p>
-                    </div>
+                    {
+                        systemHealth.map((systemHealth, index) => (
+                            <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                              duration: 0.4,
+                              delay: index * 0.1, // staggered effect
+                              ease: "easeOut",
+                            }}
+                          >
+                            <div
+                                className="rounded-lg custom-border shadow-lg p-4 flex items-center gap-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl"
+                            >
+                                <div className="w-[80px] h-[80px] flex items-center justify-center rounded-full">
+                                    <Image className='icons-bg' src={systemHealth.icon} alt={systemHealth.name} width={40} height={40} />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <h1 className="text-sm">{systemHealth.name}</h1>
+                                    <p className="text-3xl font-bold"><CountUp end={Number(systemHealth.valueChange)} />%</p>
+                                    <p className="text-sm dark:text-white">{systemHealth.change}</p>
+                                </div>
+                            </div>
+                            </motion.div>
+                        ))
+                    }
+                    {
+                        systemHealth.length === 0 && (
+                            <div className="flex items-center justify-center h-full">
+                                <p className="text-gray-100 dark:text-gray-400">No system health data available</p>
+                            </div>
+                        )
+                    }
                 </div>
                 </motion.div>
             </div>

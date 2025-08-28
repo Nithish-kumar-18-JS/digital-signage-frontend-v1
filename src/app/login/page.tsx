@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form"
 import { auth } from "@/api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { email } from "zod"
 
 export default function Login() {
   const formValidation = z.object({
@@ -18,25 +19,60 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    getValues,
+    setValue,
   } = useForm<LoginData>({
     resolver: zodResolver(formValidation),
   })
 
   const { login } = auth
   const [serverError, setServerError] = useState<string | null>(null)
+  const [rememberMe, setRememberMe] = useState(false)
   const router = useRouter()
+
   const onSubmit = async (data: LoginData) => {
     setServerError(null)
     try {
       const response = await login(data)
-      if(response){
+      if (response) {
+        if (rememberMe) {
+          localStorage.setItem("rememberMe", "true")
+          localStorage.setItem("email", data.email)
+          localStorage.setItem("password", data.password)
+        } else {
+          localStorage.removeItem("rememberMe")
+          localStorage.removeItem("email")
+          localStorage.removeItem("password")
+        }
         router.push("/dashboard")
       }
     } catch (error: any) {
-        console.log(error)
+      console.log(error)
       setServerError(error?.response?.data?.message || "Login failed")
     }
   }
+
+  // Load saved credentials on mount
+  useEffect(() => {
+    const remembered = localStorage.getItem("rememberMe") === "true"
+    let email = localStorage.getItem("email")
+    let password = localStorage.getItem("password")
+    if(!email){
+      localStorage.setItem("email", getValues("email"))
+    }
+    if(!password){
+      localStorage.setItem("password", getValues("password"))
+    }
+
+    email = localStorage.getItem("email") || ""
+    password = localStorage.getItem("password") || ""
+
+    if (remembered ) {
+      setValue("email", email)
+      setValue("password", password)
+      setRememberMe(true)
+    }
+  }, [rememberMe])
 
   return (
     <div className="flex justify-center items-center min-h-screen custom-background">
@@ -117,6 +153,15 @@ export default function Login() {
               id="remember"
               type="checkbox"
               className="w-4 h-4 accent-[#1d1d1d]/80"
+              checked={rememberMe}
+              onChange={(e) => {
+                setRememberMe(e.target.checked)
+                if(e.target.checked){
+                  localStorage.setItem("rememberMe", "true")
+                }else{
+                  localStorage.removeItem("rememberMe")
+                }
+              }}
             />
             <label
               htmlFor="remember"
@@ -141,14 +186,16 @@ export default function Login() {
           </button>
 
           {/* Forgot password */}
-          <p className="text-xs text-[#1d1d1d]/80 mt-1 hover:underline cursor-pointer text-center">
+          <p className="text-xs text-[#ffffff]/80 mt-1 hover:underline cursor-pointer text-center">
             Forgot password?
           </p>
           {/* Don't have an account */}
-          <p onClick={() => router.push("/signup")} className="text-xs text-[#1d1d1d]/80 mt-1 hover:underline cursor-pointer text-center">
+          <p
+            onClick={() => router.push("/signup")}
+            className="text-xs text-[#ffffff]/80 mt-1 hover:underline cursor-pointer text-center"
+          >
             Don't have an account?
           </p>
-          
         </form>
       </div>
     </div>

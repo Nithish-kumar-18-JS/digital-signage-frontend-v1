@@ -107,7 +107,7 @@ export default function Signup() {
           </button>
 
           {/* Already have an account */}
-          <Link href="/login" className="text-xs text-[#1d1d1d]/80 mt-1 hover:underline cursor-pointer text-center">
+          <Link href="/login" className="text-xs text-[#ffffff]/80 mt-1 hover:underline cursor-pointer text-center">
             Already have an account?
           </Link>
         </form>

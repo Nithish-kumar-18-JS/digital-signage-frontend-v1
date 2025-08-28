@@ -18,6 +18,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
     { name: "Playlists", href: "/playlists", icon: "/icons/playlist.png" },
     { name: "Screens", href: "/screens", icon: "/icons/screens.png" },
     { name: "Schedule", href: "/schedule", icon: "/icons/schedule.png" },
+    { name : "Web Player", href: "/webplayer", icon: "/icons/television.png"}
   ];
 
   const handleLogout = () => {
@@ -54,7 +55,7 @@ export const Sidebar = ({isOpen,setIsOpen}: {isOpen: boolean,setIsOpen: (value: 
         {navLinks.map(({ name, href, icon }) => {
           const isActive = pathname === href;
           return (
-            <Link key={name} href={href}>
+            <Link key={name} href={href} target={name === "Web Player" ? "_blank" : "_self"}>
               <div
                 className={clsx(
                   "flex items-center p-4 rounded mt-4 cursor-pointer transition-colors duration-200",

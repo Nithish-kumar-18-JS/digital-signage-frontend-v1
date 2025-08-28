@@ -63,6 +63,7 @@ export default function WebPlayer() {
     socket.on('screenUpdated', async (data: any) => {
       try {
         const parsedData: any = JSON.parse(data);
+        console.log('Server response:', parsedData);
         if (parsedData?.deviceId === registrationCode) {
           setScreenData(parsedData);
           localStorage.setItem('screenData', JSON.stringify(parsedData));
@@ -201,7 +202,7 @@ export default function WebPlayer() {
               </p>
               <p className="mt-2 text-base sm:text-lg">
                 Register this screen at:{' '}
-                <span className="text-teal-400 break-all">app.yourdomain.com</span>
+                <span className="text-teal-400 break-all">{process.env.NEXT_PUBLIC_WEB_FRONTEND_URL || "http://localhost:3001"}</span>
               </p>
             </div>
     
